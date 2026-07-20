@@ -37,6 +37,7 @@ const selectPage = (pageName) => {
 
 <template>
   <div class="app-shell">
+    <!-- The header is shared by every visible page in this small single-file app. -->
     <header class="site-header">
       <nav class="navigation" aria-label="Main navigation">
         <button class="brand" type="button" @click="selectPage('home')">
@@ -67,6 +68,7 @@ const selectPage = (pageName) => {
       </nav>
     </header>
 
+    <!-- Home is the first confirmed screen from the supplied wireframe. -->
     <main v-if="currentPage === 'home'">
       <!-- The homepage follows the first supplied wireframe from top to bottom. -->
       <section class="hero page-padding">
@@ -107,6 +109,7 @@ const selectPage = (pageName) => {
       </section>
     </main>
 
+    <!-- Get Help is the second confirmed screen from the supplied wireframe. -->
     <main v-else-if="currentPage === 'get-help'" class="get-help page-padding">
       <!-- The Get Help page follows the second supplied wireframe. -->
       <div class="page-title">
@@ -167,9 +170,10 @@ const selectPage = (pageName) => {
       </section>
     </main>
 
-    <!-- Unspecified pages intentionally remain empty. -->
+    <!-- Unspecified pages intentionally remain empty until their content is confirmed. -->
     <main v-else class="blank-page"></main>
 
+    <!-- The footer uses the two different column arrangements shown in the wireframes. -->
     <footer class="site-footer page-padding">
       <div v-if="currentPage === 'get-help'" class="footer-grid">
         <h2>Quick Links</h2>

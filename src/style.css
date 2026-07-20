@@ -1,4 +1,5 @@
 :root {
+  /* These variables keep the small assignment's colours easy to change in one place. */
   --blue: #1768b1;
   --dark-blue: #0e3d76;
   --ink: #18324d;
@@ -8,9 +9,11 @@
 }
 
 * {
+  /* Use predictable element sizes when padding and borders are added. */
   box-sizing: border-box;
 }
 
+/* Global page defaults apply to both confirmed screens and the empty screens. */
 body {
   margin: 0;
   color: var(--ink);
@@ -25,6 +28,7 @@ button {
 }
 
 .app-shell {
+  /* Keep the website centred on large screens while allowing it to fill mobile screens. */
   width: min(1180px, 100%);
   min-height: 100vh;
   margin: 0 auto;
@@ -32,11 +36,13 @@ button {
 }
 
 .site-header {
+  /* A light divider separates the navigation from the page content. */
   border-bottom: 1px solid var(--line);
   background: #ffffff;
 }
 
 .navigation {
+  /* Flexbox places the brand, navigation links, and emergency button in one row. */
   display: flex;
   align-items: center;
   gap: 24px;
@@ -78,6 +84,7 @@ button {
 }
 
 .nav-list {
+  /* The list is horizontal on desktop and becomes a vertical menu at the mobile breakpoint. */
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -98,6 +105,7 @@ button {
 }
 
 .nav-link.active {
+  /* The active underline follows the visual cue in the supplied wireframes. */
   color: var(--blue);
   font-weight: 700;
   text-decoration: underline;
@@ -106,6 +114,7 @@ button {
 
 .emergency-button,
 .action-button {
+  /* All action buttons share one simple visual rule to keep the assignment consistent. */
   padding: 8px 18px;
   color: #ffffff;
   border: 1px solid var(--blue);
@@ -126,6 +135,7 @@ button {
 }
 
 .hero {
+  /* The homepage hero has a photo area on the left and the main message on the right. */
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
@@ -135,6 +145,7 @@ button {
 }
 
 .photo-placeholder {
+  /* Real image content has not been confirmed, so the design keeps a labelled placeholder. */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -163,6 +174,7 @@ button {
 .feature-grid,
 .help-grid,
 .footer-grid {
+  /* CSS Grid is used only for repeated layout; Vue still supplies the page data. */
   display: grid;
   gap: 12px;
 }
@@ -174,6 +186,7 @@ button {
 }
 
 .feature-card {
+  /* Each homepage card is intentionally simple: title in the centre and action at the bottom. */
   display: flex;
   flex-direction: column;
   min-height: 178px;
@@ -202,6 +215,7 @@ button {
 .support-banner,
 .crisis-panel,
 .start-panel {
+  /* These panels keep their two-column desktop arrangement and stack on small screens. */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -234,6 +248,7 @@ button {
 }
 
 .get-help {
+  /* The Get Help page begins with a centred title, followed by the crisis panel and cards. */
   padding-top: 28px;
   padding-bottom: 0;
 }
@@ -275,6 +290,7 @@ button {
 }
 
 .help-card {
+  /* The first two support options sit side by side; the appointment card spans both columns. */
   display: flex;
   align-items: center;
   gap: 16px;
@@ -321,10 +337,12 @@ button {
 }
 
 .blank-page {
+  /* Empty pages keep the navigation working without inventing unconfirmed content. */
   min-height: 500px;
 }
 
 .site-footer {
+  /* Footer content is kept separate from the main page content with one light divider. */
   padding-top: 20px;
   padding-bottom: 28px;
   border-top: 1px solid var(--line);
@@ -345,6 +363,7 @@ button {
 }
 
 @media (max-width: 900px) {
+  /* At tablet and mobile widths, the navigation becomes a small collapsible menu. */
   .menu-button {
     display: block;
   }
@@ -378,6 +397,7 @@ button {
 }
 
 @media (max-width: 650px) {
+  /* The narrow layout stacks the hero, support panels, cards, and footer columns vertically. */
   .page-padding {
     padding-right: 18px;
     padding-left: 18px;
