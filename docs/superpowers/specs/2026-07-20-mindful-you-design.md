@@ -209,3 +209,17 @@ The design is complete when:
 - The site is usable on mobile, tablet, and desktop widths.
 - The code is organized into small Vue components with detailed English comments.
 - The build completes successfully without unnecessary fallback logic.
+
+## 10. Course-assignment simplification
+
+The latest implementation decision intentionally reduces the project to the scale of a course assignment. This section supersedes the earlier component tree in this document:
+
+```text
+mindful-you/
+└─ src/
+   ├─ App.vue
+   ├─ main.js
+   └─ style.css
+```
+
+`App.vue` contains the navigation, the confirmed Home and Get Help layouts, the small page-switching state, and the empty content for unconfirmed pages. Repeated homepage cards use one `v-for` loop. The project keeps only simple Vue syntax: `ref`, `v-if`, `v-else-if`, `v-for`, and click handlers. Separate page components, prop chains, custom events between multiple component layers, and unused fallback messages are intentionally not used in this assignment version.
