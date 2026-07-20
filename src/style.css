@@ -1,0 +1,12 @@
+@import './assets/main.css';
+
+/* Keep the page root at full height so the footer sits after short pages. */
+#app {
+  min-height: 100vh;
+}
+
+/* Make keyboard focus visible for buttons and links used by the single-page UI. */
+button:focus-visible {
+  outline: 3px solid #8bd3ff;
+  outline-offset: 3px;
+}
