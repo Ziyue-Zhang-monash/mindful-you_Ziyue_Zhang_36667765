@@ -25,6 +25,10 @@ The Home and Get Help pages contain the main design content from the A1 wirefram
 
 The first version does not include a backend, user accounts, a real assessment scoring system, online chat, appointment booking, service-location search, or real external crisis-service integration.
 
+### Wireframe fidelity update
+
+The two provided wireframes are the source of truth for the current Home and Get Help layouts. The implementation keeps their section order, visible English text, placeholders, navigation labels, button labels, and footer headings. The hand-drawn borders and line style are not treated as visual requirements. Areas that are not confirmed by the wireframes remain empty instead of receiving additional explanatory copy.
+
 ## 3. Technical approach
 
 Use the following simple project foundation:

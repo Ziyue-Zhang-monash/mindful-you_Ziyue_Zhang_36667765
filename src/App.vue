@@ -45,6 +45,6 @@ const selectPage = (pageName) => {
       <AboutPage v-else-if="activePage === 'about'" @select-page="selectPage" />
     </main>
 
-    <SiteFooter @select-page="selectPage" />
+    <SiteFooter :active-page="activePage" @select-page="selectPage" />
   </div>
 </template>
