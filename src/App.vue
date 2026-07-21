@@ -26,13 +26,104 @@ const featureCards = [
   { title: 'About Us', action: 'Learn More', page: 'about' }
 ]
 
-// Header buttons, homepage cards, and selected call-to-action buttons use this
+// This array is the data source for the support cards on the Get Help page.
+// Keeping repeated content in data makes the template shorter and easier to read.
+const supportOptions = [
+  { title: 'Online Counselling', button: 'Start Chat', wide: false },
+  { title: 'Local Services', button: 'Find Services', wide: false },
+  { title: 'Book an Appointment', button: 'Book Now', wide: true }
+]
+
+// Header buttons, homepage cards, and authentication actions use this
 // same small function to change the visible page.
 const selectPage = (pageName) => {
   currentPage.value = pageName
   menuOpen.value = false
   window.scrollTo(0, 0)
 }
+
+// Store a small local account list for this assignment's basic authentication demo.
+const savedUsers = localStorage.getItem('mindfulYouUsers')
+const userList = ref(savedUsers ? JSON.parse(savedUsers) : [])
+const savedUser = localStorage.getItem('mindfulYouCurrentUser')
+const currentUser = ref(savedUser ? JSON.parse(savedUser) : null)
+
+// These refs control the login/register form and its simple validation messages.
+const registerMode = ref(false)
+const authForm = ref({ name: '', email: '', password: '' })
+const authErrors = ref({})
+const authMessage = ref('')
+
+// Check required values, email format, and password length before authentication.
+const validateAuthForm = () => {
+  const errors = {}
+
+  if (registerMode.value && !authForm.value.name.trim()) {
+    errors.name = 'Name is required.'
+  }
+
+  if (!authForm.value.email.trim()) {
+    errors.email = 'Email is required.'
+  } else if (!/^\S+@\S+\.\S+$/.test(authForm.value.email)) {
+    errors.email = 'Please enter a valid email.'
+  }
+
+  if (authForm.value.password.length < 6) {
+    errors.password = 'Password must be at least 6 characters.'
+  }
+
+  authErrors.value = errors
+  return Object.keys(errors).length === 0
+}
+
+// Register a user or check the entered details against the saved user list.
+const submitAuthForm = () => {
+  authMessage.value = ''
+
+  if (!validateAuthForm()) {
+    return
+  }
+
+  const email = authForm.value.email.trim().toLowerCase()
+
+  if (registerMode.value) {
+    const userExists = userList.value.some((user) => user.email === email)
+
+    if (userExists) {
+      authMessage.value = 'This email is already registered.'
+      return
+    }
+
+    userList.value.push({ name: authForm.value.name.trim(), email, password: authForm.value.password })
+    localStorage.setItem('mindfulYouUsers', JSON.stringify(userList.value))
+    authMessage.value = 'Account created. You can now log in.'
+    registerMode.value = false
+    authForm.value = { name: '', email, password: '' }
+    return
+  }
+
+  const user = userList.value.find(
+    (savedAccount) => savedAccount.email === email && savedAccount.password === authForm.value.password
+  )
+
+  if (!user) {
+    authMessage.value = 'Email or password is incorrect.'
+    return
+  }
+
+  currentUser.value = { name: user.name, email: user.email }
+  localStorage.setItem('mindfulYouCurrentUser', JSON.stringify(currentUser.value))
+  authForm.value = { name: '', email: '', password: '' }
+  selectPage('home')
+}
+
+// Clear the current user and return to the homepage.
+const logout = () => {
+  currentUser.value = null
+  localStorage.removeItem('mindfulYouCurrentUser')
+  selectPage('home')
+}
+
 </script>
 
 <template>
@@ -58,6 +149,19 @@ const selectPage = (pageName) => {
             >
               {{ item.label }}
             </button>
+          </li>
+          <li v-if="!currentUser">
+            <button
+              type="button"
+              :class="['nav-link', { active: currentPage === 'login' }]"
+              @click="selectPage('login')"
+            >
+              Login
+            </button>
+          </li>
+          <li v-else class="user-menu">
+            <span class="user-label">Hi, {{ currentUser.name }}</span>
+            <button class="nav-link" type="button" @click="logout">Logout</button>
           </li>
           <li>
             <button class="emergency-button" type="button" @click="selectPage('get-help')">
@@ -132,26 +236,14 @@ const selectPage = (pageName) => {
       </section>
 
       <section class="help-grid">
-        <article class="help-card">
+        <article
+          v-for="option in supportOptions"
+          :key="option.title"
+          :class="['help-card', { 'appointment-card': option.wide }]"
+        >
           <div class="small-photo photo-placeholder">Photo</div>
-          <div>
-            <h2>Online<br />Counselling</h2>
-            <button class="action-button" type="button">Start Chat</button>
-          </div>
-        </article>
-
-        <article class="help-card">
-          <div class="small-photo photo-placeholder">Photo</div>
-          <div>
-            <h2>Local Services</h2>
-            <button class="action-button" type="button">⌕ Find Services</button>
-          </div>
-        </article>
-
-        <article class="help-card appointment-card">
-          <div class="small-photo photo-placeholder">Photo</div>
-          <h2>Book an Appointment</h2>
-          <button class="action-button" type="button">Book Now</button>
+          <h2>{{ option.title }}</h2>
+          <button class="action-button" type="button">{{ option.button }}</button>
         </article>
       </section>
 
@@ -168,6 +260,45 @@ const selectPage = (pageName) => {
           <button class="action-button" type="button">Read Crisis Guide</button>
         </div>
       </section>
+
+    </main>
+
+    <!-- This page provides the simple register and login flow required by C.1. -->
+    <main v-else-if="currentPage === 'login'" class="auth-page page-padding">
+      <div class="page-title">
+        <h1>{{ registerMode ? 'Register' : 'Login' }}</h1>
+        <p>{{ registerMode ? 'Create an account to continue.' : 'Log in to your account.' }}</p>
+      </div>
+
+      <form class="auth-form" @submit.prevent="submitAuthForm">
+        <label v-if="registerMode">
+          Name
+          <input v-model="authForm.name" type="text" />
+          <span v-if="authErrors.name" class="form-error">{{ authErrors.name }}</span>
+        </label>
+
+        <label>
+          Email
+          <input v-model="authForm.email" type="text" />
+          <span v-if="authErrors.email" class="form-error">{{ authErrors.email }}</span>
+        </label>
+
+        <label>
+          Password
+          <input v-model="authForm.password" type="password" />
+          <span v-if="authErrors.password" class="form-error">{{ authErrors.password }}</span>
+        </label>
+
+        <button class="action-button" type="submit">
+          {{ registerMode ? 'Create Account' : 'Login' }}
+        </button>
+      </form>
+
+      <p v-if="authMessage" class="auth-message">{{ authMessage }}</p>
+
+      <button class="switch-auth-button" type="button" @click="registerMode = !registerMode">
+        {{ registerMode ? 'Already have an account? Login' : 'Need an account? Register' }}
+      </button>
     </main>
 
     <!-- Unspecified pages intentionally remain empty until their content is confirmed. -->

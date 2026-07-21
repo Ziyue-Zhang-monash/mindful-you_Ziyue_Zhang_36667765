@@ -336,6 +336,77 @@ button {
   flex: 1;
 }
 
+/* The login form keeps the basic authentication demo centred and easy to use. */
+.auth-page {
+  min-height: 500px;
+  padding-top: 40px;
+  padding-bottom: 50px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 5px;
+  color: var(--dark-blue);
+  font-weight: 700;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 9px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fbfdff;
+  font: inherit;
+}
+
+.form-error {
+  color: #b42318;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.auth-message {
+  max-width: 420px;
+  margin: 14px auto 0;
+  color: #b42318;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.switch-auth-button {
+  display: block;
+  margin: 18px auto 0;
+  padding: 0;
+  color: var(--blue);
+  border: 0;
+  background: transparent;
+  font-size: 0.8rem;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.user-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.switch-auth-button:hover {
+  color: var(--dark-blue);
+}
+
 .blank-page {
   /* Empty pages keep the navigation working without inventing unconfirmed content. */
   min-height: 500px;
