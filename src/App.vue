@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 // The current page is the only piece of state needed for this small assignment.
 const currentPage = ref('home')
@@ -34,19 +34,45 @@ const supportOptions = [
   { title: 'Book an Appointment', button: 'Book Now', wide: true }
 ]
 
-// Header buttons, homepage cards, and authentication actions use this
-// same small function to change the visible page.
+// Store a small local account list for this assignment's authentication demo.
+// New registrations always receive the normal user role.
+const defaultAdmin = {
+  name: 'Administrator',
+  email: 'admin@mindfulyou.com',
+  password: 'admin123',
+  role: 'admin'
+}
+const savedUsers = localStorage.getItem('mindfulYouUsers')
+const loadedUsers = savedUsers ? JSON.parse(savedUsers) : []
+const userList = ref(loadedUsers.map((user) => ({ ...user, role: user.role || 'user' })))
+
+// Add one fixed administrator account so the second role can be tested immediately.
+if (!userList.value.some((user) => user.role === 'admin')) {
+  userList.value.push(defaultAdmin)
+  localStorage.setItem('mindfulYouUsers', JSON.stringify(userList.value))
+}
+
+const savedUser = localStorage.getItem('mindfulYouCurrentUser')
+const savedUserData = savedUser ? JSON.parse(savedUser) : null
+const currentUser = ref(
+  savedUserData ? { ...savedUserData, role: savedUserData.role || 'user' } : null
+)
+
+// This computed value controls administrator-only navigation and page content.
+const isAdmin = computed(() => currentUser.value?.role === 'admin')
+
+// Header buttons, homepage cards, and authentication actions use this function
+// to change the visible page. Admin pages are protected by this small check.
 const selectPage = (pageName) => {
+  if (pageName === 'admin' && !isAdmin.value) {
+    currentPage.value = 'home'
+    return
+  }
+
   currentPage.value = pageName
   menuOpen.value = false
   window.scrollTo(0, 0)
 }
-
-// Store a small local account list for this assignment's basic authentication demo.
-const savedUsers = localStorage.getItem('mindfulYouUsers')
-const userList = ref(savedUsers ? JSON.parse(savedUsers) : [])
-const savedUser = localStorage.getItem('mindfulYouCurrentUser')
-const currentUser = ref(savedUser ? JSON.parse(savedUser) : null)
 
 // These refs control the login/register form and its simple validation messages.
 const registerMode = ref(false)
@@ -94,7 +120,12 @@ const submitAuthForm = () => {
       return
     }
 
-    userList.value.push({ name: authForm.value.name.trim(), email, password: authForm.value.password })
+    userList.value.push({
+      name: authForm.value.name.trim(),
+      email,
+      password: authForm.value.password,
+      role: 'user'
+    })
     localStorage.setItem('mindfulYouUsers', JSON.stringify(userList.value))
     authMessage.value = 'Account created. You can now log in.'
     registerMode.value = false
@@ -111,7 +142,7 @@ const submitAuthForm = () => {
     return
   }
 
-  currentUser.value = { name: user.name, email: user.email }
+  currentUser.value = { name: user.name, email: user.email, role: user.role }
   localStorage.setItem('mindfulYouCurrentUser', JSON.stringify(currentUser.value))
   authForm.value = { name: '', email: '', password: '' }
   selectPage('home')
@@ -160,8 +191,18 @@ const logout = () => {
             </button>
           </li>
           <li v-else class="user-menu">
-            <span class="user-label">Hi, {{ currentUser.name }}</span>
+            <span class="user-label">Hi, {{ currentUser.name }} ({{ currentUser.role }})</span>
             <button class="nav-link" type="button" @click="logout">Logout</button>
+          </li>
+          <li v-if="isAdmin">
+            <button
+              class="nav-link"
+              type="button"
+              :class="{ active: currentPage === 'admin' }"
+              @click="selectPage('admin')"
+            >
+              Admin Dashboard
+            </button>
           </li>
           <li>
             <button class="emergency-button" type="button" @click="selectPage('get-help')">
@@ -296,9 +337,29 @@ const logout = () => {
 
       <p v-if="authMessage" class="auth-message">{{ authMessage }}</p>
 
-      <button class="switch-auth-button" type="button" @click="registerMode = !registerMode">
+    <button class="switch-auth-button" type="button" @click="registerMode = !registerMode">
         {{ registerMode ? 'Already have an account? Login' : 'Need an account? Register' }}
       </button>
+    </main>
+
+    <!-- Only administrators can reach this page through the guarded navigation. -->
+    <main v-else-if="currentPage === 'admin'" class="admin-page page-padding">
+      <div class="page-title">
+        <h1>Admin Dashboard</h1>
+        <p>Administrator-only information.</p>
+      </div>
+
+      <section class="admin-panel">
+        <h2>Registered Users</h2>
+        <p>Total accounts: {{ userList.length }}</p>
+
+        <ul class="user-list">
+          <li v-for="user in userList" :key="user.email">
+            <span>{{ user.name }} - {{ user.email }}</span>
+            <strong>{{ user.role }}</strong>
+          </li>
+        </ul>
+      </section>
     </main>
 
     <!-- Unspecified pages intentionally remain empty until their content is confirmed. -->

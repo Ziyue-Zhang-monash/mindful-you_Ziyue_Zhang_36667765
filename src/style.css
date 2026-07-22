@@ -407,6 +407,54 @@ button {
   color: var(--dark-blue);
 }
 
+.admin-page {
+  min-height: 500px;
+  padding-top: 40px;
+  padding-bottom: 50px;
+}
+
+.admin-panel {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.admin-panel h2 {
+  margin: 0 0 6px;
+  color: var(--dark-blue);
+  font-size: 1.1rem;
+}
+
+.admin-panel p {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+
+.user-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+.user-list strong {
+  color: var(--blue);
+}
+
 .blank-page {
   /* Empty pages keep the navigation working without inventing unconfirmed content. */
   min-height: 500px;
