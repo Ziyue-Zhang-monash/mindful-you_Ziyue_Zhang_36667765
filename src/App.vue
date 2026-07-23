@@ -13,7 +13,8 @@ const navItems = [
   { id: 'get-help', label: 'Get Help' },
   { id: 'self-help', label: 'Self-Help' },
   { id: 'family', label: 'For Family' },
-  { id: 'about', label: 'About Us' }
+  { id: 'about', label: 'About Us' },
+  { id: 'reviews', label: 'Reviews' }
 ]
 
 // The card content is also data so the six repeated cards only need one template.
@@ -153,6 +154,82 @@ const logout = () => {
   currentUser.value = null
   localStorage.removeItem('mindfulYouCurrentUser')
   selectPage('home')
+}
+
+// Ratings are stored as small objects so the average can be calculated from all users.
+const savedRatings = localStorage.getItem('mindfulYouRatings')
+const ratings = ref(savedRatings ? JSON.parse(savedRatings) : [])
+const selectedService = ref(supportOptions[0].title)
+const selectedScore = ref(0)
+const ratingMessage = ref('')
+
+// Calculate the average score for one service from the saved ratings.
+const getAverageRating = (serviceName) => {
+  const serviceRatings = ratings.value.filter((rating) => rating.service === serviceName)
+
+  if (serviceRatings.length === 0) {
+    return 'No ratings yet'
+  }
+
+  const total = serviceRatings.reduce((sum, rating) => sum + rating.score, 0)
+  return (total / serviceRatings.length).toFixed(1)
+}
+
+// Add the score scale only when a service already has ratings.
+const formatAverageRating = (serviceName) => {
+  const average = getAverageRating(serviceName)
+  return average === 'No ratings yet' ? average : `${average} / 5`
+}
+
+// Return the number of ratings for one service for the summary cards.
+const getRatingCount = (serviceName) => {
+  return ratings.value.filter((rating) => rating.service === serviceName).length
+}
+
+// Find the current user's score for a service so it can be shown separately.
+const getUserRating = (serviceName) => {
+  if (!currentUser.value) {
+    return 'Not rated'
+  }
+
+  const userRating = ratings.value.find(
+    (rating) => rating.service === serviceName && rating.userEmail === currentUser.value.email
+  )
+
+  return userRating ? `${userRating.score} / 5` : 'Not rated'
+}
+
+// Save a new rating or update the current user's previous rating for that service.
+const submitRating = () => {
+  ratingMessage.value = ''
+
+  if (!currentUser.value) {
+    ratingMessage.value = 'Please log in before submitting a rating.'
+    return
+  }
+
+  if (selectedScore.value === 0) {
+    ratingMessage.value = 'Please choose a score from 1 to 5.'
+    return
+  }
+
+  const existingRating = ratings.value.find(
+    (rating) => rating.service === selectedService.value && rating.userEmail === currentUser.value.email
+  )
+
+  if (existingRating) {
+    existingRating.score = selectedScore.value
+  } else {
+    ratings.value.push({
+      service: selectedService.value,
+      score: selectedScore.value,
+      userEmail: currentUser.value.email
+    })
+  }
+
+  localStorage.setItem('mindfulYouRatings', JSON.stringify(ratings.value))
+  ratingMessage.value = 'Rating saved successfully.'
+  selectedScore.value = 0
 }
 
 </script>
@@ -302,6 +379,53 @@ const logout = () => {
         </div>
       </section>
 
+    </main>
+
+    <!-- The Reviews page keeps rating content separate from the original wireframes. -->
+    <main v-else-if="currentPage === 'reviews'" class="reviews-page page-padding">
+      <div class="page-title">
+        <h1>Reviews</h1>
+        <p>See how users rate our support services.</p>
+      </div>
+
+      <section class="review-grid">
+        <article v-for="option in supportOptions" :key="option.title" class="review-card">
+          <h2>{{ option.title }}</h2>
+          <p class="my-rating">My Rating: {{ getUserRating(option.title) }}</p>
+          <p>{{ getRatingCount(option.title) }} rating(s)</p>
+          <p class="average-score">Average Rating: {{ formatAverageRating(option.title) }}</p>
+        </article>
+      </section>
+
+      <section class="rating-panel">
+        <h2>Rate a Support Service</h2>
+        <div class="service-choices" aria-label="Choose a service to rate">
+          <button
+            v-for="option in supportOptions"
+            :key="option.title"
+            class="service-choice"
+            :class="{ selected: selectedService === option.title }"
+            type="button"
+            @click="selectedService = option.title"
+          >
+            {{ option.title }}
+          </button>
+        </div>
+
+        <label class="rating-score-label">
+          Score
+          <select v-model.number="selectedScore">
+            <option :value="0" disabled>Select a score</option>
+            <option v-for="score in 5" :key="score" :value="score">{{ score }}</option>
+          </select>
+        </label>
+
+        <button class="action-button" type="button" @click="submitRating">
+          Submit Rating
+        </button>
+        <p v-if="ratingMessage" class="rating-message">{{ ratingMessage }}</p>
+        <p v-if="!currentUser" class="login-hint">Log in to submit a rating.</p>
+      </section>
     </main>
 
     <!-- This page provides the simple register and login flow required by C.1. -->

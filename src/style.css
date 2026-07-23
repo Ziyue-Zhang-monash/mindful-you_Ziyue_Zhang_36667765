@@ -336,6 +336,107 @@ button {
   flex: 1;
 }
 
+/* The Reviews page keeps rating content separate from the confirmed wireframes. */
+.reviews-page {
+  min-height: 500px;
+  padding-top: 40px;
+  padding-bottom: 50px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.review-card,
+.rating-panel {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.review-card h2,
+.rating-panel h2 {
+  margin: 0 0 10px;
+  color: var(--dark-blue);
+  font-size: 1rem;
+}
+
+.review-card p,
+.rating-panel p {
+  margin: 5px 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.my-rating {
+  color: var(--dark-blue) !important;
+  font-weight: 700;
+}
+
+.average-score {
+  color: var(--blue) !important;
+  font-size: 1.4rem !important;
+  font-weight: 700;
+}
+
+.rating-panel {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.service-choices {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.service-choice {
+  flex: 1;
+  min-height: 44px;
+  padding: 8px;
+  color: var(--dark-blue);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #ffffff;
+  font-size: 0.75rem;
+}
+
+.service-choice.selected,
+.service-choice:hover {
+  color: #ffffff;
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.rating-score-label {
+  display: grid;
+  gap: 5px;
+  margin: 14px 0 18px;
+  color: var(--dark-blue);
+  font-weight: 700;
+}
+
+.rating-score-label select {
+  padding: 9px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fbfdff;
+  font: inherit;
+}
+
+.rating-message {
+  color: #18794e !important;
+}
+
+.login-hint {
+  color: var(--muted);
+}
+
 /* The login form keeps the basic authentication demo centred and easy to use. */
 .auth-page {
   min-height: 500px;
@@ -548,6 +649,7 @@ button {
 
   .feature-grid,
   .help-grid,
+  .review-grid,
   .footer-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -561,5 +663,12 @@ button {
   .footer-grid > * + * {
     padding-left: 0;
     border-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* On very narrow screens, each review card uses the full available width. */
+  .review-grid {
+    grid-template-columns: 1fr;
   }
 }
