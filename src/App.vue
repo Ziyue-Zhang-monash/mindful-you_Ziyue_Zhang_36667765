@@ -159,8 +159,7 @@ const logout = () => {
 // Each rating stores a service, score, and user email.
 const savedRatings = localStorage.getItem('mindfulYouRatings')
 const ratings = ref(savedRatings ? JSON.parse(savedRatings) : [])
-const selectedService = ref(supportOptions[0].title)
-const selectedScore = ref(0)
+const selectedScores = ref({})
 const ratingMessage = ref('')
 
 // Calculate the average score for a service.
@@ -200,7 +199,7 @@ const getUserRating = (serviceName) => {
 }
 
 // Save or update a rating.
-const submitRating = () => {
+const submitRating = (serviceName) => {
   ratingMessage.value = ''
 
   if (!currentUser.value) {
@@ -208,28 +207,30 @@ const submitRating = () => {
     return
   }
 
-  if (selectedScore.value === 0) {
+  const selectedScore = selectedScores.value[serviceName] || 0
+
+  if (selectedScore === 0) {
     ratingMessage.value = 'Please choose a score from 1 to 5.'
     return
   }
 
   const existingRating = ratings.value.find(
-    (rating) => rating.service === selectedService.value && rating.userEmail === currentUser.value.email
+    (rating) => rating.service === serviceName && rating.userEmail === currentUser.value.email
   )
 
   if (existingRating) {
-    existingRating.score = selectedScore.value
+    existingRating.score = selectedScore
   } else {
     ratings.value.push({
-      service: selectedService.value,
-      score: selectedScore.value,
+      service: serviceName,
+      score: selectedScore,
       userEmail: currentUser.value.email
     })
   }
 
   localStorage.setItem('mindfulYouRatings', JSON.stringify(ratings.value))
   ratingMessage.value = 'Rating saved successfully.'
-  selectedScore.value = 0
+  selectedScores.value[serviceName] = 0
 }
 
 </script>
@@ -394,38 +395,23 @@ const submitRating = () => {
           <p class="my-rating">My Rating: {{ getUserRating(option.title) }}</p>
           <p>{{ getRatingCount(option.title) }} rating(s)</p>
           <p class="average-score">Average Rating: {{ formatAverageRating(option.title) }}</p>
+
+          <label class="rating-score-label">
+            Score
+            <select v-model.number="selectedScores[option.title]">
+              <option :value="0" disabled>Select a score</option>
+              <option v-for="score in 5" :key="score" :value="score">{{ score }}</option>
+            </select>
+          </label>
+
+          <button class="action-button" type="button" @click="submitRating(option.title)">
+            Submit Rating
+          </button>
         </article>
       </section>
 
-      <section class="rating-panel">
-        <h2>Rate a Support Service</h2>
-        <div class="service-choices" aria-label="Choose a service to rate">
-          <button
-            v-for="option in supportOptions"
-            :key="option.title"
-            class="service-choice"
-            :class="{ selected: selectedService === option.title }"
-            type="button"
-            @click="selectedService = option.title"
-          >
-            {{ option.title }}
-          </button>
-        </div>
-
-        <label class="rating-score-label">
-          Score
-          <select v-model.number="selectedScore">
-            <option :value="0" disabled>Select a score</option>
-            <option v-for="score in 5" :key="score" :value="score">{{ score }}</option>
-          </select>
-        </label>
-
-        <button class="action-button" type="button" @click="submitRating">
-          Submit Rating
-        </button>
-        <p v-if="ratingMessage" class="rating-message">{{ ratingMessage }}</p>
-        <p v-if="!currentUser" class="login-hint">Log in to submit a rating.</p>
-      </section>
+      <p v-if="ratingMessage" class="rating-message">{{ ratingMessage }}</p>
+      <p v-if="!currentUser" class="login-hint">Log in to submit a rating.</p>
     </main>
 
     <!-- Login and registration page. -->
