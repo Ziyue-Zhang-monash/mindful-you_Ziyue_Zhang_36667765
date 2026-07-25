@@ -30,9 +30,24 @@ const featureCards = [
 // Support options displayed on the Get Help page.
 // The template renders these options with v-for.
 const supportOptions = [
-  { title: 'Online Counselling', button: 'Start Chat', wide: false },
-  { title: 'Local Services', button: 'Find Services', wide: false },
-  { title: 'Book an Appointment', button: 'Book Now', wide: true }
+  {
+    title: 'Online Counselling',
+    button: 'Start Chat',
+    image: '/assets/online-counselling.png',
+    description: 'Talk with a counsellor from a place that feels comfortable.'
+  },
+  {
+    title: 'Local Services',
+    button: 'Find Services',
+    image: '/assets/local-services.png',
+    description: 'Explore support options available in your local community.'
+  },
+  {
+    title: 'Book an Appointment',
+    button: 'Book Now',
+    image: '/assets/book-appointment.png',
+    description: 'Choose a time to discuss the support that works for you.'
+  }
 ]
 
 // Load the accounts used by the login form.
@@ -295,16 +310,28 @@ const submitRating = (serviceName) => {
     <main v-if="currentPage === 'home'">
       <!-- Main hero section. -->
       <section class="hero page-padding">
-        <div class="photo-placeholder">Photo</div>
+        <img
+          class="photo-placeholder hero-image"
+          src="/assets/mindful-you-hero.png"
+          alt="A calm counselling room with a comfortable chair and plants"
+        />
         <div class="hero-content">
-          <h1>Mental Health<br />Support Starts<br />Here</h1>
-          <div class="button-row">
+          <h1>Mental Health Support Starts Here</h1>
+          <p class="hero-intro">
+            Explore practical information, self-assessment tools and support options in one place.
+          </p>
+          <div class="button-row hero-actions">
             <button class="action-button" type="button" @click="selectPage('assessment')">
               Start Self-<br />Assessment
             </button>
             <button class="action-button" type="button" @click="selectPage('get-help')">
               Get Help
             </button>
+          </div>
+          <div class="hero-highlights">
+            <span>Learn at your own pace</span>
+            <span>Check in with yourself</span>
+            <span>Find the right support</span>
           </div>
         </div>
       </section>
@@ -342,10 +369,7 @@ const submitRating = (serviceName) => {
 
       <section class="crisis-panel">
         <div>
-          <h2>
-            If you are in immediate danger or having a crisis,<br />
-            help is available right now.
-          </h2>
+          <h2>If you are in immediate danger or having a crisis, help is available now.</h2>
           <p>You are not alone. Support is just a call or click away.</p>
         </div>
         <div class="button-column">
@@ -355,19 +379,22 @@ const submitRating = (serviceName) => {
       </section>
 
       <section class="help-grid">
-        <article
-          v-for="option in supportOptions"
-          :key="option.title"
-          :class="['help-card', { 'appointment-card': option.wide }]"
-        >
-          <div class="small-photo photo-placeholder">Photo</div>
-          <h2>{{ option.title }}</h2>
-          <button class="action-button" type="button">{{ option.button }}</button>
+        <article v-for="option in supportOptions" :key="option.title" class="help-card">
+          <img class="service-image" :src="option.image" :alt="option.title" />
+          <div class="help-card-content">
+            <h2>{{ option.title }}</h2>
+            <p>{{ option.description }}</p>
+            <button class="action-button" type="button">{{ option.button }}</button>
+          </div>
         </article>
       </section>
 
       <section class="start-panel">
-        <div class="tiny-photo photo-placeholder">Photo</div>
+        <img
+          class="tiny-photo"
+          src="/assets/book-appointment.png"
+          alt="Calendar and notebook"
+        />
         <div>
           <h2>Not sure where to begin?</h2>
           <p>We can help you take the first step.</p>
@@ -391,6 +418,7 @@ const submitRating = (serviceName) => {
 
       <section class="review-grid">
         <article v-for="option in supportOptions" :key="option.title" class="review-card">
+          <img class="review-image" :src="option.image" :alt="option.title" />
           <h2>{{ option.title }}</h2>
           <p class="my-rating">My Rating: {{ getUserRating(option.title) }}</p>
           <p>{{ getRatingCount(option.title) }} rating(s)</p>

@@ -17,9 +17,9 @@
 body {
   margin: 0;
   color: var(--ink);
-  background: #f8fbff;
+  background: #eaf3f8;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
 }
 
@@ -29,25 +29,34 @@ button {
 
 .app-shell {
   /* Centre the application on wide screens. */
-  width: min(1180px, 100%);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   min-height: 100vh;
-  margin: 0 auto;
-  background: #ffffff;
+  margin: 0;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(128, 203, 194, 0.22), transparent 24rem),
+    radial-gradient(circle at 92% 34%, rgba(139, 184, 226, 0.22), transparent 30rem),
+    #f7fbfd;
+}
+
+.app-shell > main {
+  flex: 1;
 }
 
 .site-header {
   /* Separate the header from the page content. */
   border-bottom: 1px solid var(--line);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.88);
 }
 
 .navigation {
   /* Arrange the brand and navigation items. */
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 32px;
   min-height: 74px;
-  padding: 14px 28px;
+  padding: 16px 32px;
 }
 
 .brand {
@@ -88,7 +97,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 5px;
+  gap: 8px;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -100,7 +109,7 @@ button {
   color: var(--ink);
   border: 0;
   background: transparent;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   white-space: nowrap;
 }
 
@@ -120,7 +129,7 @@ button {
   border: 1px solid var(--blue);
   border-radius: 5px;
   background: var(--blue);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   line-height: 1.2;
 }
 
@@ -130,18 +139,18 @@ button {
 }
 
 .page-padding {
-  padding-right: 28px;
-  padding-left: 28px;
+  padding-right: clamp(24px, 4vw, 72px);
+  padding-left: clamp(24px, 4vw, 72px);
 }
 
 .hero {
-  /* Hero image placeholder and heading. */
+  /* Homepage image and heading. */
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
   align-items: center;
-  gap: 48px;
-  padding-top: 28px;
-  padding-bottom: 28px;
+  gap: clamp(32px, 4vw, 72px);
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .photo-placeholder {
@@ -156,19 +165,62 @@ button {
   font-size: 0.85rem;
 }
 
+.hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: var(--pale-blue);
+}
+
 .hero h1 {
-  margin: 0 0 34px;
+  margin: 0 0 18px;
   color: var(--dark-blue);
-  font-size: clamp(2.3rem, 5vw, 4.1rem);
+  font-size: clamp(2.8rem, 4.2vw, 5rem);
   font-weight: 800;
   letter-spacing: -0.06em;
   line-height: 1.05;
+}
+
+.hero-intro {
+  max-width: 580px;
+  margin: 0 0 26px;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  white-space: nowrap;
 }
 
 .button-row {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.hero-actions {
+  gap: 16px;
+}
+
+.hero-actions .action-button {
+  min-width: 170px;
+  padding: 14px 24px;
+  font-size: 1rem;
+}
+
+.hero-highlights {
+  display: grid;
+  gap: 8px;
+  margin-top: 26px;
+  color: var(--dark-blue);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.hero-highlights span::before {
+  margin-right: 8px;
+  color: var(--blue);
+  content: "•";
 }
 
 .feature-grid,
@@ -180,27 +232,29 @@ button {
 }
 
 .feature-grid {
-  grid-template-columns: repeat(6, 1fr);
-  padding-top: 2px;
-  padding-bottom: 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding-top: 4px;
+  padding-bottom: 40px;
 }
 
 .feature-card {
   /* Layout for each homepage card. */
   display: flex;
   flex-direction: column;
-  min-height: 178px;
-  padding: 22px 12px 12px;
+  min-height: 190px;
+  padding: 24px 18px 18px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
   text-align: center;
 }
 
 .feature-card h2 {
   margin: auto 0;
   color: var(--dark-blue);
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .card-link {
@@ -208,7 +262,7 @@ button {
   color: var(--blue);
   border: 0;
   background: transparent;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 700;
 }
 
@@ -220,11 +274,11 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  margin-bottom: 28px;
-  padding-top: 18px;
-  padding-bottom: 18px;
+  margin-bottom: 40px;
+  padding-top: 24px;
+  padding-bottom: 24px;
   border-radius: 12px;
-  background: var(--pale-blue);
+  background: linear-gradient(120deg, #dceefa, #e7f5ef);
 }
 
 .support-banner h2,
@@ -244,13 +298,13 @@ button {
 .footer-grid p {
   margin: 0 0 8px;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
 }
 
 .get-help {
   /* Layout for the Get Help page. */
-  padding-top: 28px;
-  padding-bottom: 0;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .page-title {
@@ -272,7 +326,9 @@ button {
 }
 
 .crisis-panel {
-  background: #fff8f7;
+  margin-bottom: 28px;
+  padding: 28px;
+  background: linear-gradient(120deg, #fff0ec, #fff9f4);
 }
 
 .crisis-panel h2 {
@@ -285,51 +341,64 @@ button {
 }
 
 .help-grid {
-  grid-template-columns: repeat(2, 1fr);
-  margin-bottom: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 28px;
 }
 
 .help-card {
-  /* Support cards and the wide appointment card. */
+  /* Support card layout. */
   display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 152px;
-  padding: 24px 12px 16px;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+  min-height: 360px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
 }
 
-.small-photo {
-  flex: 0 0 112px;
-  min-height: 84px;
+.service-image,
+.review-image {
+  display: block;
+  width: 100%;
+  min-height: 240px;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.help-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
 }
 
 .help-card h2 {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
-.appointment-card {
-  grid-column: 1 / -1;
-  min-height: 112px;
-  padding: 12px;
-}
-
-.appointment-card h2 {
-  flex: 1;
+.help-card p {
+  margin: 0 0 20px;
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .start-panel {
-  margin-bottom: 28px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background: #f8fbff;
+  margin-bottom: 0;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.75);
 }
 
 .tiny-photo {
   flex: 0 0 56px;
-  min-height: 46px;
+  width: 76px;
+  height: 58px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .start-panel > div:nth-child(2) {
@@ -338,7 +407,7 @@ button {
 
 /* Layout for the Reviews page. */
 .reviews-page {
-  min-height: 500px;
+  min-height: 0;
   padding-top: 40px;
   padding-bottom: 50px;
 }
@@ -346,25 +415,26 @@ button {
 .review-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 22px;
+  margin-bottom: 28px;
 }
 
 .review-card {
-  padding: 18px;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
 }
 
 .review-card h2 {
-  margin: 0 0 10px;
+  margin: 20px 20px 10px;
   color: var(--dark-blue);
   font-size: 1rem;
 }
 
 .review-card p {
-  margin: 5px 0;
+  margin: 7px 20px;
   color: var(--muted);
   font-size: 0.8rem;
 }
@@ -383,7 +453,7 @@ button {
 .rating-score-label {
   display: grid;
   gap: 5px;
-  margin: 14px 0 18px;
+  margin: 18px 20px;
   color: var(--dark-blue);
   font-weight: 700;
 }
@@ -534,7 +604,11 @@ button {
   padding-top: 20px;
   padding-bottom: 28px;
   border-top: 1px solid var(--line);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.review-card .action-button {
+  margin: 0 20px 22px;
 }
 
 .footer-grid {
@@ -604,6 +678,10 @@ button {
     gap: 28px;
   }
 
+  .hero-intro {
+    white-space: normal;
+  }
+
   .button-row,
   .support-banner .action-button,
   .crisis-panel .action-button,
@@ -635,7 +713,8 @@ button {
 }
 
 @media (max-width: 480px) {
-  /* One-column review cards on very narrow screens. */
+  /* One-column cards on very narrow screens. */
+  .help-grid,
   .review-grid {
     grid-template-columns: 1fr;
   }
