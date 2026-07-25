@@ -171,6 +171,26 @@ const logout = () => {
   selectPage('home')
 }
 
+// Delete a normal user account from the administrator page.
+const deleteUser = (email) => {
+  if (!isAdmin.value) {
+    return
+  }
+
+  const user = userList.value.find((account) => account.email === email)
+
+  if (!user || user.role === 'admin') {
+    return
+  }
+
+  if (!window.confirm(`Delete the account for ${user.email}?`)) {
+    return
+  }
+
+  userList.value = userList.value.filter((account) => account.email !== email)
+  localStorage.setItem('mindfulYouUsers', JSON.stringify(userList.value))
+}
+
 // Each rating stores a service, score, and user email.
 const savedRatings = localStorage.getItem('mindfulYouRatings')
 const ratings = ref(savedRatings ? JSON.parse(savedRatings) : [])
@@ -495,6 +515,14 @@ const submitRating = (serviceName) => {
           <li v-for="user in userList" :key="user.email">
             <span>{{ user.name }} - {{ user.email }}</span>
             <strong>{{ user.role }}</strong>
+            <button
+              v-if="user.role !== 'admin'"
+              class="delete-button"
+              type="button"
+              @click="deleteUser(user.email)"
+            >
+              Delete
+            </button>
           </li>
         </ul>
       </section>

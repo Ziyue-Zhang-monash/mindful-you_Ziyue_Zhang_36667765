@@ -582,7 +582,9 @@ button {
 
 .user-list li {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 10px;
   border: 1px solid var(--line);
@@ -592,6 +594,21 @@ button {
 
 .user-list strong {
   color: var(--blue);
+}
+
+.delete-button {
+  padding: 6px 12px;
+  color: #b42318;
+  border: 1px solid #efb4ad;
+  border-radius: 5px;
+  background: #fff6f5;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  color: #ffffff;
+  background: #b42318;
 }
 
 .blank-page {
