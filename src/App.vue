@@ -322,7 +322,7 @@ const submitRating = (serviceName) => {
           </p>
           <div class="button-row hero-actions">
             <button class="action-button" type="button" @click="selectPage('assessment')">
-              Start Self-<br />Assessment
+              Start Self-Assessment
             </button>
             <button class="action-button" type="button" @click="selectPage('get-help')">
               Get Help

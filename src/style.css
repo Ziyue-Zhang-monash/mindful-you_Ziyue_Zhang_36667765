@@ -624,6 +624,40 @@ button {
   font-size: 1.1rem;
 }
 
+@media (max-width: 1100px) {
+  /* Tablet layout. */
+  .navigation {
+    gap: 16px;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .nav-link {
+    padding-right: 6px;
+    padding-left: 6px;
+    font-size: 0.78rem;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .hero-content {
+    max-width: 720px;
+  }
+
+  .hero-intro {
+    white-space: normal;
+  }
+
+  .feature-grid,
+  .help-grid,
+  .review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 900px) {
   /* Mobile navigation. */
   .menu-button {
@@ -654,7 +688,7 @@ button {
   }
 
   .feature-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -714,6 +748,7 @@ button {
 
 @media (max-width: 480px) {
   /* One-column cards on very narrow screens. */
+  .feature-grid,
   .help-grid,
   .review-grid {
     grid-template-columns: 1fr;
