@@ -1,5 +1,5 @@
 :root {
-  /* These variables keep the small assignment's colours easy to change in one place. */
+  /* Colour variables. */
   --blue: #1768b1;
   --dark-blue: #0e3d76;
   --ink: #18324d;
@@ -9,17 +9,17 @@
 }
 
 * {
-  /* Use predictable element sizes when padding and borders are added. */
+  /* Use border-box sizing for all elements. */
   box-sizing: border-box;
 }
 
-/* Global page defaults apply to both confirmed screens and the empty screens. */
+/* Page defaults. */
 body {
   margin: 0;
   color: var(--ink);
-  background: #f8fbff;
+  background: #eaf3f8;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
 }
 
@@ -28,26 +28,35 @@ button {
 }
 
 .app-shell {
-  /* Keep the website centred on large screens while allowing it to fill mobile screens. */
-  width: min(1180px, 100%);
+  /* Centre the application on wide screens. */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   min-height: 100vh;
-  margin: 0 auto;
-  background: #ffffff;
+  margin: 0;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(128, 203, 194, 0.22), transparent 24rem),
+    radial-gradient(circle at 92% 34%, rgba(139, 184, 226, 0.22), transparent 30rem),
+    #f7fbfd;
+}
+
+.app-shell > main {
+  flex: 1;
 }
 
 .site-header {
-  /* A light divider separates the navigation from the page content. */
+  /* Separate the header from the page content. */
   border-bottom: 1px solid var(--line);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.88);
 }
 
 .navigation {
-  /* Flexbox places the brand, navigation links, and emergency button in one row. */
+  /* Arrange the brand and navigation items. */
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 32px;
   min-height: 74px;
-  padding: 14px 28px;
+  padding: 16px 32px;
 }
 
 .brand {
@@ -84,11 +93,11 @@ button {
 }
 
 .nav-list {
-  /* The list is horizontal on desktop and becomes a vertical menu at the mobile breakpoint. */
+  /* Horizontal navigation on desktop; vertical menu on small screens. */
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 5px;
+  gap: 8px;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -100,12 +109,12 @@ button {
   color: var(--ink);
   border: 0;
   background: transparent;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   white-space: nowrap;
 }
 
 .nav-link.active {
-  /* The active underline follows the visual cue in the supplied wireframes. */
+  /* Highlight the current page. */
   color: var(--blue);
   font-weight: 700;
   text-decoration: underline;
@@ -114,13 +123,13 @@ button {
 
 .emergency-button,
 .action-button {
-  /* All action buttons share one simple visual rule to keep the assignment consistent. */
+  /* Shared button styles. */
   padding: 8px 18px;
   color: #ffffff;
   border: 1px solid var(--blue);
   border-radius: 5px;
   background: var(--blue);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   line-height: 1.2;
 }
 
@@ -130,22 +139,22 @@ button {
 }
 
 .page-padding {
-  padding-right: 28px;
-  padding-left: 28px;
+  padding-right: clamp(24px, 4vw, 72px);
+  padding-left: clamp(24px, 4vw, 72px);
 }
 
 .hero {
-  /* The homepage hero has a photo area on the left and the main message on the right. */
+  /* Homepage image and heading. */
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
   align-items: center;
-  gap: 48px;
-  padding-top: 28px;
-  padding-bottom: 28px;
+  gap: clamp(32px, 4vw, 72px);
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .photo-placeholder {
-  /* Real image content has not been confirmed, so the design keeps a labelled placeholder. */
+  /* Placeholder image area. */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,13 +165,31 @@ button {
   font-size: 0.85rem;
 }
 
+.hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: var(--pale-blue);
+}
+
 .hero h1 {
-  margin: 0 0 34px;
+  margin: 0 0 18px;
   color: var(--dark-blue);
-  font-size: clamp(2.3rem, 5vw, 4.1rem);
+  font-size: clamp(2.8rem, 4.2vw, 5rem);
   font-weight: 800;
   letter-spacing: -0.06em;
   line-height: 1.05;
+}
+
+.hero-intro {
+  max-width: 580px;
+  margin: 0 0 26px;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  white-space: nowrap;
 }
 
 .button-row {
@@ -171,36 +198,63 @@ button {
   gap: 12px;
 }
 
+.hero-actions {
+  gap: 16px;
+}
+
+.hero-actions .action-button {
+  min-width: 170px;
+  padding: 14px 24px;
+  font-size: 1rem;
+}
+
+.hero-highlights {
+  display: grid;
+  gap: 8px;
+  margin-top: 26px;
+  color: var(--dark-blue);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.hero-highlights span::before {
+  margin-right: 8px;
+  color: var(--blue);
+  content: "•";
+}
+
 .feature-grid,
 .help-grid,
 .footer-grid {
-  /* CSS Grid is used only for repeated layout; Vue still supplies the page data. */
+  /* Grid layout for repeated content. */
   display: grid;
   gap: 12px;
 }
 
 .feature-grid {
-  grid-template-columns: repeat(6, 1fr);
-  padding-top: 2px;
-  padding-bottom: 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding-top: 4px;
+  padding-bottom: 40px;
 }
 
 .feature-card {
-  /* Each homepage card is intentionally simple: title in the centre and action at the bottom. */
+  /* Layout for each homepage card. */
   display: flex;
   flex-direction: column;
-  min-height: 178px;
-  padding: 22px 12px 12px;
+  min-height: 190px;
+  padding: 24px 18px 18px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
   text-align: center;
 }
 
 .feature-card h2 {
   margin: auto 0;
   color: var(--dark-blue);
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .card-link {
@@ -208,23 +262,23 @@ button {
   color: var(--blue);
   border: 0;
   background: transparent;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 700;
 }
 
 .support-banner,
 .crisis-panel,
 .start-panel {
-  /* These panels keep their two-column desktop arrangement and stack on small screens. */
+  /* Two-column layout on wide screens; stacked layout on small screens. */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  margin-bottom: 28px;
-  padding-top: 18px;
-  padding-bottom: 18px;
+  margin-bottom: 40px;
+  padding-top: 24px;
+  padding-bottom: 24px;
   border-radius: 12px;
-  background: var(--pale-blue);
+  background: linear-gradient(120deg, #dceefa, #e7f5ef);
 }
 
 .support-banner h2,
@@ -244,13 +298,13 @@ button {
 .footer-grid p {
   margin: 0 0 8px;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
 }
 
 .get-help {
-  /* The Get Help page begins with a centred title, followed by the crisis panel and cards. */
-  padding-top: 28px;
-  padding-bottom: 0;
+  /* Layout for the Get Help page. */
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .page-title {
@@ -272,7 +326,9 @@ button {
 }
 
 .crisis-panel {
-  background: #fff8f7;
+  margin-bottom: 28px;
+  padding: 28px;
+  background: linear-gradient(120deg, #fff0ec, #fff9f4);
 }
 
 .crisis-panel h2 {
@@ -285,68 +341,638 @@ button {
 }
 
 .help-grid {
-  grid-template-columns: repeat(2, 1fr);
-  margin-bottom: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 28px;
 }
 
 .help-card {
-  /* The first two support options sit side by side; the appointment card spans both columns. */
+  /* Support card layout. */
   display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 152px;
-  padding: 24px 12px 16px;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+  min-height: 360px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
 }
 
-.small-photo {
-  flex: 0 0 112px;
-  min-height: 84px;
+.service-image,
+.review-image {
+  display: block;
+  width: 100%;
+  min-height: 240px;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.help-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
 }
 
 .help-card h2 {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
-.appointment-card {
-  grid-column: 1 / -1;
-  min-height: 112px;
-  padding: 12px;
-}
-
-.appointment-card h2 {
-  flex: 1;
+.help-card p {
+  margin: 0 0 20px;
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .start-panel {
-  margin-bottom: 28px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background: #f8fbff;
+  margin-bottom: 0;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.75);
 }
 
 .tiny-photo {
   flex: 0 0 56px;
-  min-height: 46px;
+  width: 76px;
+  height: 58px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .start-panel > div:nth-child(2) {
   flex: 1;
 }
 
+/* Shared layout for the new content pages. */
+.content-page {
+  padding-top: 42px;
+  padding-bottom: 56px;
+}
+
+.article-grid,
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.info-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 430px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
+}
+
+.content-image {
+  display: block;
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+}
+
+.info-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.info-card h2,
+.family-content h2,
+.about-content h2 {
+  margin: 0 0 10px;
+  color: var(--dark-blue);
+  font-size: 1.2rem;
+}
+
+.info-card p,
+.family-content p,
+.about-content p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.info-card .card-link,
+.info-card .action-button {
+  margin-top: auto;
+}
+
+/* Replace the old Learn card label with the article action. */
+.article-grid .card-link {
+  font-size: 0;
+}
+
+.article-grid .card-link::after {
+  content: 'Read Article';
+  font-size: 0.82rem;
+}
+
+.article-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 30px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
+}
+
+.back-button {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0;
+  color: var(--blue);
+  border: 0;
+  background: transparent;
+  font-weight: 700;
+}
+
+.article-detail-image {
+  width: 100%;
+  min-height: 340px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.article-detail-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.article-detail-content h2 {
+  margin: 0 0 14px;
+  color: var(--dark-blue);
+  font-size: 2rem;
+}
+
+.article-detail-content p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* Self-assessment form. */
+.assessment-form {
+  display: grid;
+  gap: 16px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
+}
+
+.assessment-question {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.assessment-question legend {
+  padding: 0 4px;
+  color: var(--dark-blue);
+  font-weight: 700;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.assessment-result {
+  max-width: 760px;
+  margin: 22px auto 0;
+  padding: 20px 26px;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #dceefa, #e7f5ef);
+}
+
+.assessment-result h2 {
+  margin: 0 0 6px;
+  color: var(--dark-blue);
+  font-size: 1.1rem;
+}
+
+.assessment-result p {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.assessment-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.secondary-button {
+  padding: 8px 18px;
+  color: var(--dark-blue);
+  border: 1px solid var(--dark-blue);
+  border-radius: 5px;
+  background: #ffffff;
+  font-size: 0.85rem;
+}
+
+.secondary-button:hover {
+  color: #ffffff;
+  background: var(--dark-blue);
+}
+
+/* Interactive tools on the Self-Help page. */
+.tool-panel,
+.support-detail {
+  max-width: 900px;
+  margin: 26px auto 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(120deg, #eef6ff, #eef9f4);
+}
+
+.tool-panel h2,
+.support-detail h2 {
+  margin: 0 0 8px;
+  color: var(--dark-blue);
+  font-size: 1.25rem;
+}
+
+.tool-panel p,
+.support-detail p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.check-in-form {
+  display: grid;
+  gap: 14px;
+  max-width: 620px;
+}
+
+.check-in-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--dark-blue);
+  font-weight: 700;
+}
+
+.check-in-form select,
+.check-in-form textarea {
+  width: 100%;
+  padding: 10px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  font: inherit;
+}
+
+.tool-message {
+  margin-top: 16px !important;
+  color: #18794e !important;
+  font-weight: 700;
+}
+
+.check-in-list {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.check-in-list li {
+  display: grid;
+  gap: 3px;
+  padding: 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.check-in-list strong {
+  color: var(--dark-blue);
+}
+
+.check-in-list span {
+  color: var(--muted);
+}
+
+/* Family and About page layouts. */
+.family-layout,
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 34px;
+  align-items: stretch;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
+}
+
+.family-image,
+.about-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 430px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.family-content,
+.about-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 12px 12px 0;
+}
+
+.family-step-list,
+.value-list {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0 22px;
+}
+
+.family-step,
+.value-card {
+  padding: 14px 16px;
+  border-left: 4px solid var(--blue);
+  border-radius: 6px;
+  background: var(--pale-blue);
+}
+
+.family-step h3,
+.value-card h3 {
+  margin: 0 0 4px;
+  color: var(--dark-blue);
+  font-size: 1rem;
+}
+
+.family-step p,
+.value-card p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.family-step .card-link {
+  margin-top: 10px;
+}
+
+.family-details {
+  margin-top: 10px !important;
+  color: var(--ink) !important;
+}
+
+.about-content > p {
+  margin-top: 0;
+}
+
+/* Layout for the Reviews page. */
+.reviews-page {
+  min-height: 0;
+  padding-top: 40px;
+  padding-bottom: 50px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.review-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 10px 24px rgba(24, 74, 117, 0.06);
+}
+
+.review-card h2 {
+  margin: 20px 20px 10px;
+  color: var(--dark-blue);
+  font-size: 1rem;
+}
+
+.review-card p {
+  margin: 7px 20px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.my-rating {
+  color: var(--dark-blue) !important;
+  font-weight: 700;
+}
+
+.average-score {
+  color: var(--blue) !important;
+  font-size: 1.4rem !important;
+  font-weight: 700;
+}
+
+.rating-score-label {
+  display: grid;
+  gap: 5px;
+  margin: 18px 20px;
+  color: var(--dark-blue);
+  font-weight: 700;
+}
+
+.rating-score-label select {
+  padding: 9px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fbfdff;
+  font: inherit;
+}
+
+.rating-message {
+  color: #18794e !important;
+}
+
+.login-hint {
+  color: var(--muted);
+}
+
+/* Layout for the login form. */
+.auth-page {
+  min-height: 500px;
+  padding-top: 40px;
+  padding-bottom: 50px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 5px;
+  color: var(--dark-blue);
+  font-weight: 700;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 9px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fbfdff;
+  font: inherit;
+}
+
+.form-error {
+  color: #b42318;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.auth-message {
+  max-width: 420px;
+  margin: 14px auto 0;
+  color: #b42318;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.switch-auth-button {
+  display: block;
+  margin: 18px auto 0;
+  padding: 0;
+  color: var(--blue);
+  border: 0;
+  background: transparent;
+  font-size: 0.8rem;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.user-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.switch-auth-button:hover {
+  color: var(--dark-blue);
+}
+
+.admin-page {
+  min-height: 500px;
+  padding-top: 40px;
+  padding-bottom: 50px;
+}
+
+.admin-panel {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.admin-panel h2 {
+  margin: 0 0 6px;
+  color: var(--dark-blue);
+  font-size: 1.1rem;
+}
+
+.admin-panel p {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+
+.user-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+.user-list strong {
+  color: var(--blue);
+}
+
+.delete-button {
+  padding: 6px 12px;
+  color: #b42318;
+  border: 1px solid #efb4ad;
+  border-radius: 5px;
+  background: #fff6f5;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  color: #ffffff;
+  background: #b42318;
+}
+
 .blank-page {
-  /* Empty pages keep the navigation working without inventing unconfirmed content. */
+  /* Empty pages still keep the shared footer in place. */
   min-height: 500px;
 }
 
 .site-footer {
-  /* Footer content is kept separate from the main page content with one light divider. */
+  /* Separate the footer from the main content. */
   padding-top: 20px;
   padding-bottom: 28px;
   border-top: 1px solid var(--line);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.review-card .action-button {
+  margin: 0 20px 22px;
 }
 
 .footer-grid {
@@ -362,8 +988,44 @@ button {
   font-size: 1.1rem;
 }
 
-@media (max-width: 900px) {
-  /* At tablet and mobile widths, the navigation becomes a small collapsible menu. */
+@media (max-width: 1100px) {
+  /* Tablet layout. */
+  .navigation {
+    gap: 16px;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .nav-link {
+    padding-right: 6px;
+    padding-left: 6px;
+    font-size: 0.78rem;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .hero-content {
+    max-width: 720px;
+  }
+
+  .hero-intro {
+    white-space: normal;
+  }
+
+  .feature-grid,
+  .help-grid,
+  .review-grid,
+  .article-grid,
+  .tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  /* Mobile navigation. */
   .menu-button {
     display: block;
   }
@@ -392,12 +1054,12 @@ button {
   }
 
   .feature-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 650px) {
-  /* The narrow layout stacks the hero, support panels, cards, and footer columns vertically. */
+  /* Stack content on narrow screens. */
   .page-padding {
     padding-right: 18px;
     padding-left: 18px;
@@ -406,7 +1068,9 @@ button {
   .hero,
   .support-banner,
   .crisis-panel,
-  .start-panel {
+  .start-panel,
+  .family-layout,
+  .about-layout {
     align-items: stretch;
     grid-template-columns: 1fr;
     flex-direction: column;
@@ -414,6 +1078,10 @@ button {
 
   .hero {
     gap: 28px;
+  }
+
+  .hero-intro {
+    white-space: normal;
   }
 
   .button-row,
@@ -429,8 +1097,36 @@ button {
 
   .feature-grid,
   .help-grid,
+  .review-grid,
+  .article-grid,
+  .tool-grid,
   .footer-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .family-content,
+  .about-content {
+    padding: 0;
+  }
+
+  .family-image,
+  .about-image {
+    height: 280px;
+    min-height: 0;
+  }
+
+  .article-detail {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 18px;
+  }
+
+  .article-detail-image {
+    min-height: 240px;
+  }
+
+  .assessment-actions {
+    flex-direction: column;
   }
 
   .appointment-card {
@@ -443,4 +1139,138 @@ button {
     padding-left: 0;
     border-left: 0;
   }
+}
+
+@media (max-width: 480px) {
+  /* One-column cards on very narrow screens. */
+  .feature-grid,
+  .help-grid,
+  .review-grid,
+  .article-grid,
+  .tool-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Keep the email form simple and easy to scan. */
+.email-form {
+  display: grid;
+  gap: 18px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #d7e5f3;
+  border-radius: 12px;
+}
+
+.email-form label {
+  display: grid;
+  gap: 8px;
+  color: #123f73;
+  font-weight: 600;
+}
+
+.email-form input,
+.email-form textarea {
+  width: 100%;
+  padding: 11px 12px;
+  color: #173f6f;
+  font: inherit;
+  border: 1px solid #c9dcec;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.email-form input[type='file'] {
+  background: #f5f9fd;
+}
+
+.email-form textarea {
+  resize: vertical;
+}
+
+.form-note {
+  max-width: 760px;
+  margin: 14px auto 0;
+  color: #5b6f85;
+  text-align: center;
+}
+
+/* Table controls for the interactive learning data. */
+.data-table-section {
+  margin-top: 34px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #d7e5f3;
+  border-radius: 12px;
+}
+
+.learn-table-section {
+  max-width: 1180px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.learn-table-section p {
+  color: var(--muted);
+}
+
+.data-table-section h2 {
+  margin-top: 0;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #d7e5f3;
+}
+
+.data-table th {
+  color: #123f73;
+  vertical-align: top;
+}
+
+.data-table th button {
+  display: block;
+  padding: 0;
+  color: #123f73;
+  font: inherit;
+  font-weight: 700;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.data-table th input {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #c9dcec;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.table-pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
