@@ -40,6 +40,7 @@ const supportOptions = [
   {
     title: 'Online Counselling',
     button: 'Start Chat',
+    page: 'online-counselling',
     image: '/assets/online-counselling.png',
     description: 'Talk with a counsellor from a place that feels comfortable.',
     details: 'Online counselling can be a useful first step when you want to talk privately. Choose a time and write down the main thing you would like help with.'
@@ -47,6 +48,7 @@ const supportOptions = [
   {
     title: 'Local Services',
     button: 'Find Services',
+    page: 'local-services',
     image: '/assets/local-services.png',
     description: 'Explore support options available in your local community.',
     details: 'Local services may include a GP, counsellor, community centre or university support service. Ask about cost, availability and how to make an appointment.'
@@ -54,11 +56,29 @@ const supportOptions = [
   {
     title: 'Book an Appointment',
     button: 'Book Now',
+    page: 'appointment',
     image: '/assets/book-appointment.png',
     description: 'Choose a time to discuss the support that works for you.',
     details: 'Before an appointment, write down your questions and any changes you have noticed. This can make it easier to explain what support you need.'
   }
 ]
+
+const urgentSupportPage = {
+  title: 'Urgent Support',
+  image: '/assets/family-support.png',
+  description: 'Immediate support is available when you need it.',
+  details: 'If someone is in immediate danger, contact local emergency services. If you need to talk, contact a 24/7 crisis support service in your area or speak with a trusted person now.'
+}
+
+const supportPageIds = ['online-counselling', 'local-services', 'appointment', 'urgent-support']
+
+const currentSupportPage = computed(() => {
+  if (currentPage.value === 'urgent-support') {
+    return urgentSupportPage
+  }
+
+  return supportOptions.find((option) => option.page === currentPage.value)
+})
 
 // Articles displayed on the Learn page.
 const learnCards = [
@@ -383,7 +403,6 @@ const assessmentResult = ref('')
 
 // State used by the Learn, Get Help and Family pages.
 const selectedArticle = ref(null)
-const selectedSupport = ref(null)
 const activeFamilyStep = ref('')
 
 // State used by the self-help tools.
@@ -421,16 +440,24 @@ const closeArticle = () => {
   window.scrollTo(0, 0)
 }
 
-// Show details for a support option.
+// Open the selected support page.
 const openSupport = (option) => {
-  selectedSupport.value = option
+  selectPage(option.page)
 }
 
 const showUrgentSupport = () => {
-  selectedSupport.value = {
-    title: 'Urgent Support',
-    details: 'If someone is in immediate danger, contact local emergency services. If you need to talk, contact a 24/7 crisis support service in your area or speak with a trusted person now.'
+  selectPage('urgent-support')
+}
+
+// Open the support details that match the cloud recommendation.
+const openAdviceSupport = () => {
+  if (supportNeed.value === 'urgent') {
+    showUrgentSupport()
+    return
   }
+
+  const optionIndex = supportNeed.value === 'talk' ? 0 : 2
+  openSupport(supportOptions[optionIndex])
 }
 
 // Open one family topic at a time.
@@ -1169,7 +1196,7 @@ watch(toolSearch, () => {
         <div v-if="supportAdvice" class="support-advice">
           <h3>{{ supportAdvice.title }}</h3>
           <p>{{ supportAdvice.message }}</p>
-          <button class="secondary-button" type="button" @click="showUrgentSupport">
+          <button class="secondary-button" type="button" @click="openAdviceSupport">
             {{ supportAdvice.action }}
           </button>
         </div>
@@ -1184,12 +1211,6 @@ watch(toolSearch, () => {
             <button class="action-button" type="button" @click="openSupport(option)">{{ option.button }}</button>
           </div>
         </article>
-      </section>
-
-      <section v-if="selectedSupport" class="support-detail">
-        <h2>{{ selectedSupport.title }}</h2>
-        <p>{{ selectedSupport.details }}</p>
-        <button class="secondary-button" type="button" @click="selectedSupport = null">Close</button>
       </section>
 
       <section class="start-panel">
@@ -1210,6 +1231,24 @@ watch(toolSearch, () => {
         </div>
       </section>
 
+    </main>
+
+    <!-- Dedicated support page content. -->
+    <main v-else-if="supportPageIds.includes(currentPage)" class="content-page page-padding support-service-page">
+      <button class="back-button" type="button" @click="selectPage('get-help')">Back to Get Help</button>
+      <div class="page-title">
+        <h1>{{ currentSupportPage.title }}</h1>
+        <p>{{ currentSupportPage.description }}</p>
+      </div>
+
+      <section class="support-service-layout">
+        <img class="service-image" :src="currentSupportPage.image" :alt="currentSupportPage.title" />
+        <div>
+          <h2>How we can help</h2>
+          <p>{{ currentSupportPage.details }}</p>
+          <button class="action-button" type="button" @click="selectPage('email')">Contact Support</button>
+        </div>
+      </section>
     </main>
 
     <!-- Email page. -->

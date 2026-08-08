@@ -600,7 +600,7 @@ button {
 
 /* Interactive tools on the Self-Help page. */
 .tool-panel,
-.support-detail {
+.support-service-layout {
   max-width: 900px;
   margin: 26px auto 0;
   padding: 24px;
@@ -610,17 +610,29 @@ button {
 }
 
 .tool-panel h2,
-.support-detail h2 {
+.support-service-layout h2 {
   margin: 0 0 8px;
   color: var(--dark-blue);
   font-size: 1.25rem;
 }
 
 .tool-panel p,
-.support-detail p {
+.support-service-layout p {
   margin: 0 0 16px;
   color: var(--muted);
   line-height: 1.55;
+}
+
+.support-service-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) 1fr;
+  align-items: center;
+  gap: 30px;
+}
+
+.support-service-layout .service-image {
+  min-height: 300px;
+  border-radius: 12px;
 }
 
 .check-in-form {
@@ -1070,6 +1082,7 @@ button {
   .crisis-panel,
   .start-panel,
   .support-finder-panel,
+  .support-service-layout,
   .family-layout,
   .about-layout {
     align-items: stretch;
