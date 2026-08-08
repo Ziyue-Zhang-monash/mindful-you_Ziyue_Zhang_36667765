@@ -603,6 +603,13 @@ const toolSearch = ref({ tool: '', time: '', focus: '' })
 const toolSort = ref({ key: 'tool', direction: 'asc' })
 const toolPage = ref(1)
 
+// State used by the support finder on the Get Help page.
+const supportNeed = ref('')
+const supportAdvice = ref(null)
+const supportAdviceLoading = ref(false)
+const supportAdviceError = ref('')
+const cloudFunctionUrl = 'https://a3.mindful-you.pages.dev/api/mental-health-tip'
+
 // Return rows that contain the search text in every selected column.
 const filterRows = (rows, search) => {
   return rows.filter((row) => {
@@ -653,6 +660,31 @@ const sortMark = (sortState, key) => {
   }
 
   return sortState.direction === 'asc' ? ' ↑' : ' ↓'
+}
+
+// Ask the serverless function for advice based on the selected need.
+const findSupport = async () => {
+  if (!supportNeed.value) {
+    supportAdviceError.value = 'Please choose the type of support you need.'
+    return
+  }
+
+  supportAdviceLoading.value = true
+  supportAdviceError.value = ''
+
+  try {
+    const response = await fetch(`${cloudFunctionUrl}?need=${supportNeed.value}`)
+
+    if (!response.ok) {
+      throw new Error('The support service is not available.')
+    }
+
+    supportAdvice.value = await response.json()
+  } catch (error) {
+    supportAdviceError.value = 'Support advice is not available right now.'
+  } finally {
+    supportAdviceLoading.value = false
+  }
 }
 
 watch(resourceSearch, () => {
@@ -1113,6 +1145,33 @@ watch(toolSearch, () => {
         <div class="button-column">
           <button class="action-button" type="button" @click="showUrgentSupport">Call 24/7 Hotline</button>
           <button class="action-button" type="button" @click="showUrgentSupport">Emergency Contacts</button>
+        </div>
+      </section>
+
+      <section class="support-finder-panel">
+        <div>
+          <h2>Find the Right Support</h2>
+          <p>Choose what you need and receive a suggested next step.</p>
+        </div>
+        <div class="support-finder-form">
+          <label for="support-need">I need help with</label>
+          <select id="support-need" v-model="supportNeed">
+            <option value="">Select an option</option>
+            <option value="urgent">Immediate or urgent support</option>
+            <option value="talk">Talking to someone</option>
+            <option value="appointment">Booking an appointment</option>
+          </select>
+          <button class="action-button" type="button" :disabled="supportAdviceLoading" @click="findSupport">
+            {{ supportAdviceLoading ? 'Finding Support...' : 'Find Support' }}
+          </button>
+        </div>
+        <p v-if="supportAdviceError" class="form-error">{{ supportAdviceError }}</p>
+        <div v-if="supportAdvice" class="support-advice">
+          <h3>{{ supportAdvice.title }}</h3>
+          <p>{{ supportAdvice.message }}</p>
+          <button class="secondary-button" type="button" @click="showUrgentSupport">
+            {{ supportAdvice.action }}
+          </button>
         </div>
       </section>
 

@@ -1069,6 +1069,7 @@ button {
   .support-banner,
   .crisis-panel,
   .start-panel,
+  .support-finder-panel,
   .family-layout,
   .about-layout {
     align-items: stretch;
@@ -1087,8 +1088,14 @@ button {
   .button-row,
   .support-banner .action-button,
   .crisis-panel .action-button,
-  .start-panel .action-button {
+  .start-panel .action-button,
+  .support-finder-form .action-button {
     width: 100%;
+  }
+
+  .support-finder-form {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .button-row {
@@ -1214,6 +1221,73 @@ button {
 
 .learn-table-section p {
   color: var(--muted);
+}
+
+.support-finder-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 1180px;
+  margin: 0 auto 34px;
+  padding: 22px 24px;
+  border: 1px solid #c9dcec;
+  border-radius: 12px;
+  background: #eef7ff;
+}
+
+.support-finder-panel > div:first-child {
+  text-align: center;
+}
+
+.support-finder-panel h2,
+.support-finder-panel p {
+  margin-top: 0;
+}
+
+.support-finder-panel p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.support-finder-form {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  width: min(760px, 100%);
+}
+
+.support-finder-form label {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  color: var(--dark-blue);
+  font-weight: 700;
+}
+
+.support-finder-form select {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+}
+
+.support-advice {
+  width: min(760px, 100%);
+  padding: 16px;
+  border-left: 4px solid var(--blue);
+  background: #ffffff;
+}
+
+.support-advice h3 {
+  margin: 0 0 6px;
+  color: var(--dark-blue);
+}
+
+.support-advice p {
+  margin-bottom: 12px;
 }
 
 .data-table-section h2 {
