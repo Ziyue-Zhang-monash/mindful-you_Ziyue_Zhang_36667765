@@ -635,6 +635,71 @@ button {
   border-radius: 12px;
 }
 
+.geo-location-panel {
+  display: grid;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.geo-search-block {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.geo-search-block h2 {
+  margin: 0 0 8px;
+  color: var(--dark-blue);
+}
+
+.geo-search-block p {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.geo-form-row,
+.geo-route-form {
+  display: grid;
+  align-items: end;
+  gap: 10px;
+}
+
+.geo-form-row {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.geo-route-form {
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr) auto;
+}
+
+.geo-form-row label,
+.geo-route-form label {
+  color: var(--dark-blue);
+  font-weight: 700;
+}
+
+.geo-form-row input,
+.geo-route-form input {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.geo-message {
+  margin: 12px 0 0 !important;
+  color: var(--dark-blue) !important;
+}
+
+.geo-map {
+  min-height: 520px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
 .check-in-form {
   display: grid;
   gap: 14px;
@@ -1109,6 +1174,15 @@ button {
   .support-finder-form {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .geo-form-row,
+  .geo-route-form {
+    grid-template-columns: 1fr;
+  }
+
+  .geo-map {
+    min-height: 380px;
   }
 
   .button-row {

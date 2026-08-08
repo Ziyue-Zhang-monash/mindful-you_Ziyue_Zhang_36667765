@@ -7,6 +7,7 @@ import {
   signOut
 } from 'firebase/auth'
 import { auth } from './firebase'
+import GeoLocationMap from './components/GeoLocationMap.vue'
 
 // Track the page currently shown in the main content.
 const currentPage = ref('home')
@@ -18,6 +19,7 @@ const navItems = [
   { id: 'learn', label: 'Learn' },
   { id: 'assessment', label: 'Self-Assessment' },
   { id: 'get-help', label: 'Get Help' },
+  { id: 'geo-location', label: 'Geo Location' },
   { id: 'email', label: 'Email' },
   { id: 'self-help', label: 'Self-Help' },
   { id: 'family', label: 'For Family' },
@@ -1249,6 +1251,15 @@ watch(toolSearch, () => {
           <button class="action-button" type="button" @click="selectPage('email')">Contact Support</button>
         </div>
       </section>
+    </main>
+
+    <!-- Geo Location page content. -->
+    <main v-else-if="currentPage === 'geo-location'" class="content-page page-padding geo-page">
+      <div class="page-title">
+        <h1>Geo Location</h1>
+        <p>Search for places and find a route between two locations.</p>
+      </div>
+      <GeoLocationMap />
     </main>
 
     <!-- Email page. -->
