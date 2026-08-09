@@ -45,7 +45,8 @@ const supportOptions = [
     page: 'online-counselling',
     image: '/assets/online-counselling.png',
     description: 'Talk with a counsellor from a place that feels comfortable.',
-    details: 'Online counselling can be a useful first step when you want to talk privately. Choose a time and write down the main thing you would like help with.'
+    details: 'Online counselling can be a useful first step when you want to talk privately. Choose a time and write down the main thing you would like help with.',
+    steps: ['Choose a quiet and private place.', 'Write down the main topic you want to discuss.', 'Check your internet connection before the session.']
   },
   {
     title: 'Local Services',
@@ -53,7 +54,8 @@ const supportOptions = [
     page: 'local-services',
     image: '/assets/local-services.png',
     description: 'Explore support options available in your local community.',
-    details: 'Local services may include a GP, counsellor, community centre or university support service. Ask about cost, availability and how to make an appointment.'
+    details: 'Local services may include a GP, counsellor, community centre or university support service. Ask about cost, availability and how to make an appointment.',
+    steps: ['Search for a service near your location.', 'Check opening hours and appointment requirements.', 'Contact the service before visiting.']
   },
   {
     title: 'Book an Appointment',
@@ -61,7 +63,8 @@ const supportOptions = [
     page: 'appointment',
     image: '/assets/book-appointment.png',
     description: 'Choose a time to discuss the support that works for you.',
-    details: 'Before an appointment, write down your questions and any changes you have noticed. This can make it easier to explain what support you need.'
+    details: 'Before an appointment, write down your questions and any changes you have noticed. This can make it easier to explain what support you need.',
+    steps: ['Choose the type of support you need.', 'Prepare a short description of your concerns.', 'Keep the confirmation details for your appointment.']
   }
 ]
 
@@ -69,7 +72,8 @@ const urgentSupportPage = {
   title: 'Urgent Support',
   image: '/assets/family-support.png',
   description: 'Immediate support is available when you need it.',
-  details: 'If someone is in immediate danger, contact local emergency services. If you need to talk, contact a 24/7 crisis support service in your area or speak with a trusted person now.'
+  details: 'If someone is in immediate danger, contact local emergency services. If you need to talk, contact a 24/7 crisis support service in your area or speak with a trusted person now.',
+  steps: ['Move to a safe place if possible.', 'Contact emergency services when there is immediate danger.', 'Stay with a trusted person while arranging support.']
 }
 
 const supportPageIds = ['online-counselling', 'local-services', 'appointment', 'urgent-support']
@@ -91,7 +95,10 @@ const learnCards = [
     content: [
       'Feelings can change from day to day. Paying attention to patterns can help you understand what affects your wellbeing.',
       'Try noting your mood, energy, sleep and social connection for one week. You may notice that certain routines help you feel more settled.',
-      'If difficult feelings are lasting or affecting daily life, speaking with someone you trust can be a helpful next step.'
+      'Give each feeling a simple name, such as worried, frustrated, lonely or hopeful. Naming a feeling can make it easier to explain what you are experiencing.',
+      'Think about what happened before the feeling changed. Study pressure, poor sleep, conflict or spending time with supportive people may all influence your mood.',
+      'Be patient with yourself while you observe these patterns. The aim is not to judge every feeling, but to understand what may help you respond to it.',
+      'If difficult feelings continue, become stronger or affect daily life, speaking with someone you trust or a health professional can be a helpful next step.'
     ]
   },
   {
@@ -101,7 +108,10 @@ const learnCards = [
     content: [
       'Wellbeing does not need one big solution. Small actions repeated over time can make a difference.',
       'Choose one realistic action for today, such as taking a short walk, drinking water, preparing a meal or messaging a friend.',
-      'Keep the action simple enough that it fits your current routine. You can add more when it starts to feel natural.'
+      'Keep the action simple enough that it fits your current routine. You can add more when it starts to feel natural.',
+      'Connect the action to something you already do. For example, stretch after breakfast, take a short walk after class or prepare for sleep after brushing your teeth.',
+      'Missing one day does not mean the plan has failed. Begin again with the smallest version of the activity instead of trying to make up for it all at once.',
+      'Review the habit after one or two weeks. Keep what feels useful, change what does not fit and ask for support if daily tasks continue to feel difficult.'
     ]
   },
   {
@@ -111,7 +121,49 @@ const learnCards = [
     content: [
       'You do not need to wait until a situation feels overwhelming before asking for support.',
       'It can help to speak with a friend, family member, counsellor, doctor or student support service about what has been happening.',
-      'If you are in immediate danger, contact emergency services or a crisis support service in your area.'
+      'Changes that last for several weeks, interfere with sleep or study, or make usual activities difficult may be signs that extra support would be useful.',
+      'Before the conversation, write down what has changed, when it started and how it affects your daily life. You do not need to explain everything perfectly.',
+      'Tell the person what kind of support you need. You might want someone to listen, help you find a service or stay with you while you make an appointment.',
+      'If you are in immediate danger or thinking about harming yourself or someone else, contact emergency services or a crisis support service in your area.'
+    ]
+  },
+  {
+    title: 'Building a Support Network',
+    image: '/assets/family-support.png',
+    text: 'A support network can include friends, family and professional services.',
+    content: [
+      'Support can come from more than one person. Different people may help with listening, practical tasks or professional advice.',
+      'Write down two people you trust and one service you could contact if you needed extra support.',
+      'Include different types of support in your list. A friend may listen, a family member may help with daily tasks and a counsellor may provide professional guidance.',
+      'Tell trusted people what kind of help is useful to you. Clear requests can make support easier to provide.',
+      'Keep useful phone numbers, service details and opening hours in one place so they are easy to find when you are under pressure.',
+      'Support networks can change over time. Check your list occasionally and add new contacts when your study, work or living situation changes.'
+    ]
+  },
+  {
+    title: 'Preparing for Counselling',
+    image: '/assets/book-appointment.png',
+    text: 'A little preparation can make a first counselling session feel easier.',
+    content: [
+      'Before the session, note any changes in mood, sleep, energy or daily routines that you want to discuss.',
+      'You can prepare questions about privacy, session length, costs and what support may be available next.',
+      'Think about what you would like to be different after receiving support. A simple goal can help the counsellor understand what matters to you.',
+      'Bring any useful appointment information and arrive a little early if the session is in person. For an online session, test your connection and choose a private place.',
+      'It is fine if you do not know exactly what to say or feel nervous at first. The counsellor can ask questions and help guide the conversation.',
+      'After the session, note any agreed next steps. If the service does not feel suitable, you can ask about other options or speak with another professional.'
+    ]
+  },
+  {
+    title: 'Healthy Digital Boundaries',
+    image: '/assets/self-help.png',
+    text: 'Small changes to screen time can support sleep, focus and connection.',
+    content: [
+      'Notice whether particular apps or online activities leave you feeling tense, distracted or disconnected.',
+      'Try creating one screen-free period each day, such as during meals or before bedtime.',
+      'Use device settings to silence non-essential notifications or move distracting apps away from the home screen.',
+      'Decide what you want to do before opening an app. A clear purpose can make it easier to stop when the activity is complete.',
+      'Use the saved time for rest, movement, study or a conversation with someone you trust.',
+      'Digital boundaries do not need to be perfect. Choose limits that support your sleep, responsibilities and relationships, then adjust them when your routine changes.'
     ]
   }
 ]
@@ -213,6 +265,11 @@ const familySteps = [
     title: 'Find support together',
     text: 'Offer to help contact a counsellor, doctor or community service.',
     details: 'You can help by looking up local services, sitting with them while they make a call, or offering transport to an appointment. Remember that supporters also need breaks and support.'
+  },
+  {
+    title: 'Look after yourself too',
+    text: 'Set healthy boundaries and ask for support when you need it.',
+    details: 'Supporting someone can take time and energy. Make space for rest, maintain your own routines and speak with someone you trust if the responsibility starts to feel overwhelming.'
   }
 ]
 
@@ -221,6 +278,34 @@ const aboutValues = [
   { title: 'Respect', text: 'Everyone deserves to be heard and treated with dignity.' },
   { title: 'Accessibility', text: 'Information should be simple to understand and easy to find.' },
   { title: 'Connection', text: 'The right support can help people feel less alone.' }
+]
+
+const reviewComments = {
+  'Online Counselling': 'The information made it easier to understand what to expect before an online session.',
+  'Local Services': 'The local service guidance gave me a clear place to begin my search.',
+  'Book an Appointment': 'The preparation checklist helped me feel more ready for my appointment.'
+}
+
+const quickLinks = [
+  { label: 'Home', page: 'home' },
+  { label: 'Learn', page: 'learn' },
+  { label: 'Get Help', page: 'get-help' },
+  { label: 'Geo Location', page: 'geo-location' }
+]
+
+const resourceLinks = [
+  { label: 'Self-Assessment', page: 'assessment' },
+  { label: 'Self-Help Tools', page: 'self-help' },
+  { label: 'For Family', page: 'family' },
+  { label: 'Reviews', page: 'reviews' }
+]
+
+const validPageIds = [
+  ...navItems.map((item) => item.id),
+  ...supportPageIds,
+  'reviews',
+  'login',
+  'admin'
 ]
 
 // Local profiles store names and roles, not passwords.
@@ -249,12 +334,18 @@ const isAdmin = computed(() => currentUser.value?.role === 'admin')
 // Change the current page and close the mobile menu.
 // The admin page is allowed only for administrators.
 const selectPage = (pageName) => {
-  if (pageName === 'admin' && !isAdmin.value) {
+  const targetPage = validPageIds.includes(pageName) ? pageName : 'home'
+
+  if (targetPage === 'admin' && !isAdmin.value) {
     currentPage.value = 'home'
     return
   }
 
-  currentPage.value = pageName
+  if (targetPage === 'learn') {
+    selectedArticle.value = null
+  }
+
+  currentPage.value = targetPage
   menuOpen.value = false
   window.scrollTo(0, 0)
 }
@@ -416,6 +507,7 @@ const savedCheckIns = localStorage.getItem('mindfulYouCheckIns')
 const checkIns = ref(savedCheckIns ? JSON.parse(savedCheckIns) : [])
 const checkInMessage = ref('')
 const sleepChecklist = ref({ time: false, screen: false, room: false })
+const sleepMessage = ref('')
 
 // Email form state.
 const emailAttachment = ref(null)
@@ -432,9 +524,7 @@ const openArticle = (article) => {
 
 // Open the reviews page from the dedicated navigation button.
 const openReviews = () => {
-  currentPage.value = 'reviews'
-  menuOpen.value = false
-  window.scrollTo(0, 0)
+  selectPage('reviews')
 }
 
 const closeArticle = () => {
@@ -475,6 +565,14 @@ const openTool = (toolId) => {
 // Move through the three breathing instructions.
 const nextBreathingStep = () => {
   breathingStep.value = (breathingStep.value + 1) % breathingSteps.length
+}
+
+// Confirm the sleep routine choices made by the user.
+const saveSleepRoutine = () => {
+  const selectedSteps = Object.values(sleepChecklist.value).filter(Boolean).length
+  sleepMessage.value = selectedSteps
+    ? `${selectedSteps} sleep routine step(s) saved for tonight.`
+    : 'Choose at least one sleep routine step.'
 }
 
 // Save a short daily check-in in local storage.
@@ -525,6 +623,17 @@ const sendEmail = (event) => {
   }
 
   emailBusy.value = true
+  emailMessage.value = 'The email form has opened in a new tab.'
+  window.setTimeout(() => {
+    emailBusy.value = false
+  }, 1000)
+}
+
+// Prepare the email form with the selected support topic.
+const contactSupport = () => {
+  emailForm.value.subject = `${currentSupportPage.value.title} enquiry`
+  emailForm.value.message = `I would like more information about ${currentSupportPage.value.title.toLowerCase()}.`
+  selectPage('email')
 }
 
 // Check the five answers and show a simple guidance message.
@@ -783,7 +892,7 @@ watch(toolSearch, () => {
             </button>
           </li>
           <li>
-            <button class="emergency-button" type="button" @click="selectPage('get-help')">
+            <button class="emergency-button" type="button" @click="showUrgentSupport">
               Emergency Help
             </button>
           </li>
@@ -838,7 +947,7 @@ watch(toolSearch, () => {
             help is available 24 hours a day, 7 days a week.
           </p>
         </div>
-        <button class="action-button" type="button" @click="selectPage('get-help')">
+        <button class="action-button" type="button" @click="showUrgentSupport">
           Get Urgent Help (24/7)
         </button>
       </section>
@@ -870,7 +979,7 @@ watch(toolSearch, () => {
             <h2>{{ article.title }}</h2>
             <p>{{ article.text }}</p>
             <button class="card-link" type="button" @click="openArticle(article)">
-              Find Support →
+              Read Article →
             </button>
           </div>
         </article>
@@ -1024,6 +1133,8 @@ watch(toolSearch, () => {
         </div>
       </form>
 
+      <p class="form-note">This self-assessment provides general guidance and is not a medical diagnosis.</p>
+
       <div v-if="assessmentResult" class="assessment-result">
         <h2>Your Result</h2>
         <p>{{ assessmentResult }}</p>
@@ -1091,6 +1202,8 @@ watch(toolSearch, () => {
         <label class="option-row"><input v-model="sleepChecklist.time" type="checkbox" /> Keep a regular bedtime</label>
         <label class="option-row"><input v-model="sleepChecklist.screen" type="checkbox" /> Put screens away before bed</label>
         <label class="option-row"><input v-model="sleepChecklist.room" type="checkbox" /> Prepare a quiet, comfortable room</label>
+        <button class="action-button" type="button" @click="saveSleepRoutine">Save Routine</button>
+        <p v-if="sleepMessage" class="tool-message">{{ sleepMessage }}</p>
       </section>
     </main>
 
@@ -1144,6 +1257,10 @@ watch(toolSearch, () => {
           <p>
             Mindful You connects people with clear information, self-help ideas and support services.
             The website is designed to be a calm first step when someone is not sure where to begin.
+          </p>
+          <p>
+            Our content focuses on practical next steps. It does not replace professional advice, but it can help
+            users prepare questions, understand support options and decide where to go next.
           </p>
           <div class="value-list">
             <article v-for="value in aboutValues" :key="value.title" class="value-card">
@@ -1248,7 +1365,11 @@ watch(toolSearch, () => {
         <div>
           <h2>How we can help</h2>
           <p>{{ currentSupportPage.details }}</p>
-          <button class="action-button" type="button" @click="selectPage('email')">Contact Support</button>
+          <h3>Before you begin</h3>
+          <ul>
+            <li v-for="step in currentSupportPage.steps" :key="step">{{ step }}</li>
+          </ul>
+          <button class="action-button" type="button" @click="contactSupport">Contact Support</button>
         </div>
       </section>
     </main>
@@ -1329,6 +1450,7 @@ watch(toolSearch, () => {
           <p class="my-rating">My Rating: {{ getUserRating(option.title) }}</p>
           <p>{{ getRatingCount(option.title) }} rating(s)</p>
           <p class="average-score">Average Rating: {{ formatAverageRating(option.title) }}</p>
+          <p class="review-comment">“{{ reviewComments[option.title] }}”</p>
 
           <label class="rating-score-label">
             Score
@@ -1420,8 +1542,22 @@ watch(toolSearch, () => {
     <!-- Footer content. -->
     <footer class="site-footer page-padding">
       <div v-if="currentPage === 'get-help'" class="footer-grid">
-        <h2>Quick Links</h2>
-        <h2>Resources</h2>
+        <div>
+          <h2>Quick Links</h2>
+          <nav class="footer-link-list" aria-label="Quick links">
+            <a v-for="link in quickLinks" :key="link.page" href="#" @click.prevent="selectPage(link.page)">
+              {{ link.label }}
+            </a>
+          </nav>
+        </div>
+        <div>
+          <h2>Resources</h2>
+          <nav class="footer-link-list" aria-label="Resources">
+            <a v-for="link in resourceLinks" :key="link.page" href="#" @click.prevent="selectPage(link.page)">
+              {{ link.label }}
+            </a>
+          </nav>
+        </div>
         <div>
           <h2>Contact Us</h2>
           <p>123 Way<br />Care City, CA 12345</p>
@@ -1429,7 +1565,10 @@ watch(toolSearch, () => {
           <p>(123) 456-7890</p>
           <p>Mon - Sun: 24/7</p>
         </div>
-        <h2>Follow Us</h2>
+        <div>
+          <h2>Follow Us</h2>
+          <p>Community updates<br />Wellbeing articles<br />Support information</p>
+        </div>
       </div>
 
       <div v-else class="footer-grid">
@@ -1440,8 +1579,22 @@ watch(toolSearch, () => {
           </button>
           <p>Empowering minds. Supporting<br />well-being. Building a healthier<br />tomorrow.</p>
         </div>
-        <h2>Quick Links</h2>
-        <h2>Resources</h2>
+        <div>
+          <h2>Quick Links</h2>
+          <nav class="footer-link-list" aria-label="Quick links">
+            <a v-for="link in quickLinks" :key="link.page" href="#" @click.prevent="selectPage(link.page)">
+              {{ link.label }}
+            </a>
+          </nav>
+        </div>
+        <div>
+          <h2>Resources</h2>
+          <nav class="footer-link-list" aria-label="Resources">
+            <a v-for="link in resourceLinks" :key="link.page" href="#" @click.prevent="selectPage(link.page)">
+              {{ link.label }}
+            </a>
+          </nav>
+        </div>
         <div>
           <h2>Contact Us</h2>
           <p>123 Way<br />Care City, CA 12345</p>

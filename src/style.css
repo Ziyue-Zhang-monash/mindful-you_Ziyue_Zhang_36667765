@@ -466,16 +466,6 @@ button {
   margin-top: auto;
 }
 
-/* Replace the old Learn card label with the article action. */
-.article-grid .card-link {
-  font-size: 0;
-}
-
-.article-grid .card-link::after {
-  content: 'Read Article';
-  font-size: 0.82rem;
-}
-
 .article-detail {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1059,6 +1049,24 @@ button {
 .footer-grid > * + * {
   padding-left: 20px;
   border-left: 1px solid var(--line);
+}
+
+.footer-link-list {
+  display: grid;
+  gap: 8px;
+}
+
+.footer-link-list a {
+  width: fit-content;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.footer-link-list a:hover,
+.footer-link-list a:focus-visible {
+  color: var(--blue);
+  text-decoration: underline;
 }
 
 .footer-brand .brand-name {
