@@ -493,6 +493,7 @@ const ratingMessage = ref('')
 // Store answers and the result shown after the assessment is submitted.
 const assessmentAnswers = ref({})
 const assessmentResult = ref('')
+const assessmentExportMessage = ref('')
 
 // State used by the Learn, Get Help and Family pages.
 const selectedArticle = ref(null)
@@ -643,6 +644,7 @@ const contactSupport = () => {
 
 // Check the five answers and show a simple guidance message.
 const submitAssessment = () => {
+  assessmentExportMessage.value = ''
   const answers = assessmentQuestions.map((question) => assessmentAnswers.value[question.id])
 
   if (answers.some((answer) => !answer)) {
@@ -665,6 +667,35 @@ const submitAssessment = () => {
 const resetAssessment = () => {
   assessmentAnswers.value = {}
   assessmentResult.value = ''
+  assessmentExportMessage.value = ''
+}
+
+// Download the completed assessment as a CSV file.
+const exportAssessment = () => {
+  const rows = [['Question', 'Answer']]
+
+  assessmentQuestions.forEach((question) => {
+    rows.push([question.question, assessmentAnswers.value[question.id]])
+  })
+
+  rows.push(['Result', assessmentResult.value])
+  rows.push(['Exported At', new Date().toLocaleString()])
+
+  const csvText = rows.map((row) => {
+    return row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(',')
+  }).join('\n')
+
+  const file = new Blob(['\uFEFF' + csvText], { type: 'text/csv;charset=utf-8' })
+  const fileUrl = URL.createObjectURL(file)
+  const downloadLink = document.createElement('a')
+
+  downloadLink.href = fileUrl
+  downloadLink.download = 'mindful-you-self-assessment.csv'
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  downloadLink.remove()
+  URL.revokeObjectURL(fileUrl)
+  assessmentExportMessage.value = 'Your assessment CSV has been downloaded.'
 }
 
 // Calculate the average score for a service.
@@ -1166,9 +1197,17 @@ watch(toolSearch, () => {
       <div v-if="assessmentResult" class="assessment-result" role="status" aria-live="polite">
         <h2>Your Result</h2>
         <p>{{ assessmentResult }}</p>
-        <button class="card-link" type="button" @click="selectPage('get-help')">
-          Explore Support →
-        </button>
+        <div class="assessment-actions">
+          <button class="card-link" type="button" @click="selectPage('get-help')">
+            Explore Support →
+          </button>
+          <button class="secondary-button" type="button" @click="exportAssessment">
+            Export Result CSV
+          </button>
+        </div>
+        <p v-if="assessmentExportMessage" class="tool-message">
+          {{ assessmentExportMessage }}
+        </p>
       </div>
     </main>
 
