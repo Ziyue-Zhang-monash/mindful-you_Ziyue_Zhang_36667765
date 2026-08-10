@@ -89,6 +89,35 @@ textarea:focus-visible,
   background: rgba(255, 255, 255, 0.88);
 }
 
+.network-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 18px;
+  color: #17603a;
+  background: #e9f7ef;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.network-status span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #238636;
+}
+
+.network-status.offline {
+  color: #7a3e00;
+  background: #fff3d6;
+}
+
+.network-status.offline span {
+  background: #c76b00;
+}
+
 .navigation {
   /* Arrange the brand and navigation items. */
   display: flex;
@@ -505,6 +534,66 @@ textarea:focus-visible,
   margin-top: auto;
 }
 
+.article-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: auto;
+}
+
+.article-card-actions .card-link {
+  margin-top: 0;
+}
+
+.remove-offline {
+  color: #9b3a32;
+}
+
+.offline-reading {
+  max-width: 1180px;
+  margin: 30px auto 0;
+  padding: 24px;
+  border: 1px solid #bfd9ee;
+  border-radius: 12px;
+  background: #eef7ff;
+}
+
+.offline-reading h2,
+.offline-reading p {
+  margin-top: 0;
+}
+
+.offline-reading h2 {
+  margin-bottom: 6px;
+  color: var(--dark-blue);
+}
+
+.offline-reading p {
+  color: var(--muted);
+}
+
+.offline-empty {
+  margin-bottom: 0;
+}
+
+.offline-article-list {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.offline-article-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
 .article-detail {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -610,7 +699,30 @@ textarea:focus-visible,
 
 .assessment-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
+}
+
+.ai-support-plan {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid #b8d5ea;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.ai-support-plan ul {
+  margin: 8px 0 14px;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.ai-support-plan li {
+  margin-bottom: 6px;
+}
+
+.ai-support-plan small {
+  color: var(--muted);
 }
 
 .secondary-button {
@@ -1003,6 +1115,33 @@ textarea:focus-visible,
   min-height: 500px;
   padding-top: 40px;
   padding-bottom: 50px;
+}
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 760px;
+  margin: 0 auto 20px;
+}
+
+.dashboard-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #eef7ff;
+}
+
+.dashboard-card span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.dashboard-card strong {
+  color: var(--dark-blue);
+  font-size: 2rem;
 }
 
 .admin-panel {
@@ -1424,6 +1563,64 @@ textarea:focus-visible,
   margin-bottom: 12px;
 }
 
+.appointment-booking {
+  max-width: 1180px;
+  margin: 28px auto 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.appointment-booking h2 {
+  margin-top: 0;
+  color: var(--dark-blue);
+}
+
+.appointment-booking > div > p {
+  color: var(--muted);
+}
+
+.appointment-login {
+  text-align: center;
+}
+
+.calendar-container {
+  margin-top: 20px;
+}
+
+.calendar-help,
+.calendar-message {
+  margin: 14px 0 0;
+}
+
+.calendar-message {
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.calendar-container .fc {
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+.calendar-container .fc .fc-button-primary {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.calendar-container .fc .fc-button-primary:hover,
+.calendar-container .fc .fc-button-primary:focus {
+  border-color: var(--dark-blue);
+  background: var(--dark-blue);
+}
+
+.calendar-container .fc .fc-event {
+  border-color: var(--blue);
+  background: var(--blue);
+  cursor: pointer;
+}
+
 .data-table-section h2 {
   margin-top: 0;
 }
@@ -1495,4 +1692,26 @@ textarea:focus-visible,
 .table-pagination button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+@media (max-width: 650px) {
+  .dashboard-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .appointment-booking {
+    padding: 16px;
+  }
+
+  .calendar-container .fc .fc-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .article-card-actions,
+  .offline-article-list li {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

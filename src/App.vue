@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -7,6 +7,7 @@ import {
   signOut
 } from 'firebase/auth'
 import { auth } from './firebase'
+import AppointmentCalendar from './components/AppointmentCalendar.vue'
 import GeoLocationMap from './components/GeoLocationMap.vue'
 
 // Track the page currently shown in the main content.
@@ -331,6 +332,11 @@ const currentUser = ref(null)
 // Show administrator-only navigation and pages.
 const isAdmin = computed(() => currentUser.value?.role === 'admin')
 
+// Count each account type for the administrator dashboard.
+const totalUsers = computed(() => userList.value.length)
+const regularUsers = computed(() => userList.value.filter((user) => user.role === 'user').length)
+const administratorUsers = computed(() => userList.value.filter((user) => user.role === 'admin').length)
+
 // Change the current page and close the mobile menu.
 // The admin page is allowed only for administrators.
 const selectPage = (pageName) => {
@@ -494,10 +500,33 @@ const ratingMessage = ref('')
 const assessmentAnswers = ref({})
 const assessmentResult = ref('')
 const assessmentExportMessage = ref('')
+const aiSupportPlan = ref(null)
+const aiSupportLoading = ref(false)
+const aiSupportError = ref('')
 
 // State used by the Learn, Get Help and Family pages.
 const selectedArticle = ref(null)
 const activeFamilyStep = ref('')
+
+// Store selected Learn articles separately for offline reading.
+const savedOfflineArticles = localStorage.getItem('mindfulYouOfflineArticles')
+const offlineArticles = ref(savedOfflineArticles ? JSON.parse(savedOfflineArticles) : [])
+
+// Track browser network changes for the page status message.
+const isOnline = ref(navigator.onLine)
+const updateNetworkStatus = () => {
+  isOnline.value = navigator.onLine
+}
+
+onMounted(() => {
+  window.addEventListener('online', updateNetworkStatus)
+  window.addEventListener('offline', updateNetworkStatus)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('online', updateNetworkStatus)
+  window.removeEventListener('offline', updateNetworkStatus)
+})
 
 // State used by the self-help tools.
 const activeTool = ref('')
@@ -536,6 +565,29 @@ const openReviews = () => {
 const closeArticle = () => {
   selectedArticle.value = null
   window.scrollTo(0, 0)
+}
+
+const isArticleSaved = (articleTitle) => {
+  return offlineArticles.value.some((article) => article.title === articleTitle)
+}
+
+const storeOfflineArticles = () => {
+  localStorage.setItem('mindfulYouOfflineArticles', JSON.stringify(offlineArticles.value))
+}
+
+// Save the full article so its text remains available without a network connection.
+const saveArticleOffline = (article) => {
+  if (isArticleSaved(article.title)) {
+    return
+  }
+
+  offlineArticles.value.push(article)
+  storeOfflineArticles()
+}
+
+const removeOfflineArticle = (articleTitle) => {
+  offlineArticles.value = offlineArticles.value.filter((article) => article.title !== articleTitle)
+  storeOfflineArticles()
 }
 
 // Open the selected support page.
@@ -645,6 +697,8 @@ const contactSupport = () => {
 // Check the five answers and show a simple guidance message.
 const submitAssessment = () => {
   assessmentExportMessage.value = ''
+  aiSupportPlan.value = null
+  aiSupportError.value = ''
   const answers = assessmentQuestions.map((question) => assessmentAnswers.value[question.id])
 
   if (answers.some((answer) => !answer)) {
@@ -668,6 +722,33 @@ const resetAssessment = () => {
   assessmentAnswers.value = {}
   assessmentResult.value = ''
   assessmentExportMessage.value = ''
+  aiSupportPlan.value = null
+  aiSupportError.value = ''
+}
+
+// Request a support plan based on the assessment result.
+const generateSupportPlan = async () => {
+  aiSupportLoading.value = true
+  aiSupportError.value = ''
+  aiSupportPlan.value = null
+
+  try {
+    const response = await fetch('https://mindful-you.pages.dev/api/ai-support', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ result: assessmentResult.value })
+    })
+
+    if (!response.ok) {
+      throw new Error('The AI support service is not available.')
+    }
+
+    aiSupportPlan.value = await response.json()
+  } catch (error) {
+    aiSupportError.value = 'The personal support plan is not available right now.'
+  } finally {
+    aiSupportLoading.value = false
+  }
 }
 
 // Download the completed assessment as a CSV file.
@@ -957,6 +1038,11 @@ watch(toolSearch, () => {
       </nav>
     </header>
 
+    <div :class="['network-status', { offline: !isOnline }]" role="status" aria-live="polite">
+      <span aria-hidden="true"></span>
+      {{ isOnline ? 'Online' : 'Offline - saved articles are still available' }}
+    </div>
+
     <!-- Homepage content. -->
     <main id="main-content" v-if="currentPage === 'home'" tabindex="-1">
       <!-- Main hero section. -->
@@ -1035,11 +1121,38 @@ watch(toolSearch, () => {
           <div class="info-card-content">
             <h2>{{ article.title }}</h2>
             <p>{{ article.text }}</p>
-            <button class="card-link" type="button" @click="openArticle(article)">
-              Read Article →
-            </button>
+            <div class="article-card-actions">
+              <button class="card-link" type="button" @click="openArticle(article)">
+                Read Article →
+              </button>
+              <button
+                v-if="!isArticleSaved(article.title)"
+                class="card-link"
+                type="button"
+                @click="saveArticleOffline(article)"
+              >
+                Save for Offline
+              </button>
+              <button v-else class="card-link remove-offline" type="button" @click="removeOfflineArticle(article.title)">
+                Remove Offline Copy
+              </button>
+            </div>
           </div>
         </article>
+      </section>
+
+      <section v-if="!selectedArticle" class="offline-reading" aria-labelledby="offline-reading-title">
+        <div>
+          <h2 id="offline-reading-title">Offline Reading</h2>
+          <p>Saved articles remain available when your connection is unavailable.</p>
+        </div>
+        <p v-if="offlineArticles.length === 0" class="offline-empty">No articles saved for offline reading.</p>
+        <ul v-else class="offline-article-list">
+          <li v-for="article in offlineArticles" :key="article.title">
+            <button class="card-link" type="button" @click="openArticle(article)">{{ article.title }}</button>
+            <button class="card-link remove-offline" type="button" @click="removeOfflineArticle(article.title)">Remove</button>
+          </li>
+        </ul>
       </section>
 
       <section class="data-table-section learn-table-section">
@@ -1204,10 +1317,34 @@ watch(toolSearch, () => {
           <button class="secondary-button" type="button" @click="exportAssessment">
             Export Result CSV
           </button>
+          <button
+            v-if="!assessmentResult.startsWith('Please answer')"
+            class="action-button"
+            type="button"
+            :disabled="aiSupportLoading"
+            @click="generateSupportPlan"
+          >
+            {{ aiSupportLoading ? 'Creating Plan...' : 'Generate Personal Support Plan' }}
+          </button>
         </div>
         <p v-if="assessmentExportMessage" class="tool-message">
           {{ assessmentExportMessage }}
         </p>
+        <p v-if="aiSupportError" class="error-message" role="alert">
+          {{ aiSupportError }}
+        </p>
+
+        <section v-if="aiSupportPlan" class="ai-support-plan" aria-live="polite">
+          <h2>Personal Support Plan</h2>
+          <p>{{ aiSupportPlan.summary }}</p>
+          <ul>
+            <li v-for="suggestion in aiSupportPlan.suggestions" :key="suggestion">
+              {{ suggestion }}
+            </li>
+          </ul>
+          <p><strong>Next step:</strong> {{ aiSupportPlan.nextStep }}</p>
+          <small>General wellbeing guidance only. This is not a medical diagnosis.</small>
+        </section>
       </div>
     </main>
 
@@ -1439,7 +1576,22 @@ watch(toolSearch, () => {
           <ul>
             <li v-for="step in currentSupportPage.steps" :key="step">{{ step }}</li>
           </ul>
-          <button class="action-button" type="button" @click="contactSupport">Contact Support</button>
+          <button v-if="currentPage !== 'appointment'" class="action-button" type="button" @click="contactSupport">
+            Contact Support
+          </button>
+        </div>
+      </section>
+
+      <section v-if="currentPage === 'appointment'" class="appointment-booking">
+        <div v-if="currentUser">
+          <h2>Appointment Calendar</h2>
+          <p>Select one available hour from Monday to Friday, between 9:00 am and 5:00 pm.</p>
+          <AppointmentCalendar :current-user="currentUser" />
+        </div>
+        <div v-else class="appointment-login">
+          <h2>Log in to book an appointment</h2>
+          <p>An account is required to save and manage your appointments.</p>
+          <button class="action-button" type="button" @click="selectPage('login')">Login</button>
         </div>
       </section>
     </main>
@@ -1582,12 +1734,27 @@ watch(toolSearch, () => {
     <main id="main-content" v-else-if="currentPage === 'admin'" class="admin-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>Admin Dashboard</h1>
-        <p>Administrator-only information.</p>
+        <p>Overview of registered users and account types.</p>
       </div>
+
+      <section class="dashboard-summary" aria-label="User account summary">
+        <article class="dashboard-card">
+          <span>Total Users</span>
+          <strong>{{ totalUsers }}</strong>
+        </article>
+        <article class="dashboard-card">
+          <span>Regular Users</span>
+          <strong>{{ regularUsers }}</strong>
+        </article>
+        <article class="dashboard-card">
+          <span>Administrators</span>
+          <strong>{{ administratorUsers }}</strong>
+        </article>
+      </section>
 
       <section class="admin-panel">
         <h2>Registered Users</h2>
-        <p>Total accounts: {{ userList.length }}</p>
+        <p>Account names, email addresses and roles.</p>
 
         <ul class="user-list">
           <li v-for="user in userList" :key="user.email">
