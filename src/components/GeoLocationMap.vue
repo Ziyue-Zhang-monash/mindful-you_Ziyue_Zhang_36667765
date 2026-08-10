@@ -139,7 +139,7 @@ onUnmounted(() => {
           {{ searchLoading ? 'Searching...' : 'Search Place' }}
         </button>
       </div>
-      <p v-if="searchMessage" class="geo-message">{{ searchMessage }}</p>
+      <p v-if="searchMessage" class="geo-message" role="status" aria-live="polite">{{ searchMessage }}</p>
     </div>
 
     <div class="geo-search-block">
@@ -154,9 +154,9 @@ onUnmounted(() => {
           {{ routeLoading ? 'Finding Route...' : 'Show Route' }}
         </button>
       </div>
-      <p v-if="routeMessage" class="geo-message">{{ routeMessage }}</p>
+      <p v-if="routeMessage" class="geo-message" role="status" aria-live="polite">{{ routeMessage }}</p>
     </div>
 
-    <div ref="mapElement" class="geo-map" aria-label="Interactive map"></div>
+    <div ref="mapElement" class="geo-map" role="region" aria-label="Interactive map" tabindex="0"></div>
   </section>
 </template>

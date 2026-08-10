@@ -522,6 +522,11 @@ const openArticle = (article) => {
   window.scrollTo(0, 0)
 }
 
+// Move keyboard focus past the navigation when the skip link is used.
+const skipToMain = () => {
+  document.getElementById('main-content')?.focus()
+}
+
 // Open the reviews page from the dedicated navigation button.
 const openReviews = () => {
   selectPage('reviews')
@@ -800,6 +805,15 @@ const sortMark = (sortState, key) => {
   return sortState.direction === 'asc' ? ' ↑' : ' ↓'
 }
 
+// Describe the current table sort direction for screen readers.
+const getAriaSort = (sortState, key) => {
+  if (sortState.key !== key) {
+    return 'none'
+  }
+
+  return sortState.direction === 'asc' ? 'ascending' : 'descending'
+}
+
 // Ask the serverless function for advice based on the selected need.
 const findSupport = async () => {
   if (!supportNeed.value) {
@@ -837,6 +851,8 @@ watch(toolSearch, () => {
 
 <template>
   <div class="app-shell">
+    <a class="skip-link" href="#main-content" @click.prevent="skipToMain">Skip to main content</a>
+
     <!-- Site header and navigation. -->
     <header class="site-header">
       <nav class="navigation" aria-label="Main navigation">
@@ -845,15 +861,22 @@ watch(toolSearch, () => {
           <span class="brand-tagline">Mental Health Support</span>
         </button>
 
-        <button class="menu-button" type="button" @click="menuOpen = !menuOpen">
+        <button
+          class="menu-button"
+          type="button"
+          aria-controls="main-navigation-links"
+          :aria-expanded="menuOpen"
+          @click="menuOpen = !menuOpen"
+        >
           Menu
         </button>
 
-        <ul :class="['nav-list', { open: menuOpen }]">
+        <ul id="main-navigation-links" :class="['nav-list', { open: menuOpen }]">
           <li v-for="item in navItems" :key="item.id">
             <button
               type="button"
               :class="['nav-link', { active: currentPage === item.id }]"
+              :aria-current="currentPage === item.id ? 'page' : undefined"
               @click="selectPage(item.id)"
             >
               {{ item.label }}
@@ -863,6 +886,7 @@ watch(toolSearch, () => {
             <button
               type="button"
               :class="['nav-link', { active: currentPage === 'reviews' }]"
+              :aria-current="currentPage === 'reviews' ? 'page' : undefined"
               @click.stop="openReviews"
             >
               Reviews
@@ -872,6 +896,7 @@ watch(toolSearch, () => {
             <button
               type="button"
               :class="['nav-link', { active: currentPage === 'login' }]"
+              :aria-current="currentPage === 'login' ? 'page' : undefined"
               @click="selectPage('login')"
             >
               Login
@@ -886,6 +911,7 @@ watch(toolSearch, () => {
               class="nav-link"
               type="button"
               :class="{ active: currentPage === 'admin' }"
+              :aria-current="currentPage === 'admin' ? 'page' : undefined"
               @click="selectPage('admin')"
             >
               Admin Dashboard
@@ -901,7 +927,7 @@ watch(toolSearch, () => {
     </header>
 
     <!-- Homepage content. -->
-    <main v-if="currentPage === 'home'">
+    <main id="main-content" v-if="currentPage === 'home'" tabindex="-1">
       <!-- Main hero section. -->
       <section class="hero page-padding">
         <img
@@ -954,7 +980,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Learn page content. -->
-    <main v-else-if="currentPage === 'learn'" class="content-page page-padding">
+    <main id="main-content" v-else-if="currentPage === 'learn'" class="content-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>Learn</h1>
         <p>Explore practical information for everyday mental wellbeing.</p>
@@ -990,25 +1016,26 @@ watch(toolSearch, () => {
         <p>Search the available topics and find a resource that matches your needs.</p>
         <div class="table-wrapper">
           <table class="data-table">
+            <caption class="visually-hidden">Mental health resources. Use the column buttons to sort and the search fields to filter.</caption>
             <thead>
               <tr>
-                <th>
+                <th scope="col" :aria-sort="getAriaSort(resourceSort, 'topic')">
                   <button type="button" @click="changeTableSort(resourceSort, 'topic')">
                     Topic{{ sortMark(resourceSort, 'topic') }}
                   </button>
-                  <input v-model="resourceSearch.topic" type="search" placeholder="Search topic" />
+                  <input v-model="resourceSearch.topic" type="search" placeholder="Search topic" aria-label="Search resources by topic" />
                 </th>
-                <th>
+                <th scope="col" :aria-sort="getAriaSort(resourceSort, 'type')">
                   <button type="button" @click="changeTableSort(resourceSort, 'type')">
                     Type{{ sortMark(resourceSort, 'type') }}
                   </button>
-                  <input v-model="resourceSearch.type" type="search" placeholder="Search type" />
+                  <input v-model="resourceSearch.type" type="search" placeholder="Search resources by type" />
                 </th>
-                <th>
+                <th scope="col" :aria-sort="getAriaSort(resourceSort, 'audience')">
                   <button type="button" @click="changeTableSort(resourceSort, 'audience')">
                     Audience{{ sortMark(resourceSort, 'audience') }}
                   </button>
-                  <input v-model="resourceSearch.audience" type="search" placeholder="Search audience" />
+                  <input v-model="resourceSearch.audience" type="search" placeholder="Search resources by audience" />
                 </th>
               </tr>
             </thead>
@@ -1033,7 +1060,7 @@ watch(toolSearch, () => {
           >
             Previous
           </button>
-          <span>Page {{ resourcePage }} of {{ resourcePageCount }}</span>
+          <span aria-live="polite">Page {{ resourcePage }} of {{ resourcePageCount }}</span>
           <button
             class="secondary-button"
             type="button"
@@ -1050,25 +1077,26 @@ watch(toolSearch, () => {
         <p>Compare simple activities by the time they take and the support they provide.</p>
         <div class="table-wrapper">
           <table class="data-table">
+            <caption class="visually-hidden">Self-help tools. Use the column buttons to sort and the search fields to filter.</caption>
             <thead>
               <tr>
-                <th>
+                <th scope="col" :aria-sort="getAriaSort(toolSort, 'tool')">
                   <button type="button" @click="changeTableSort(toolSort, 'tool')">
                     Tool{{ sortMark(toolSort, 'tool') }}
                   </button>
-                  <input v-model="toolSearch.tool" type="search" placeholder="Search tool" />
+                  <input v-model="toolSearch.tool" type="search" placeholder="Search tool" aria-label="Search self-help tools by name" />
                 </th>
-                <th>
+                <th scope="col" :aria-sort="getAriaSort(toolSort, 'time')">
                   <button type="button" @click="changeTableSort(toolSort, 'time')">
                     Time{{ sortMark(toolSort, 'time') }}
                   </button>
-                  <input v-model="toolSearch.time" type="search" placeholder="Search time" />
+                  <input v-model="toolSearch.time" type="search" placeholder="Search self-help tools by time" />
                 </th>
-                <th>
+                <th scope="col" :aria-sort="getAriaSort(toolSort, 'focus')">
                   <button type="button" @click="changeTableSort(toolSort, 'focus')">
                     Focus{{ sortMark(toolSort, 'focus') }}
                   </button>
-                  <input v-model="toolSearch.focus" type="search" placeholder="Search focus" />
+                  <input v-model="toolSearch.focus" type="search" placeholder="Search self-help tools by focus" />
                 </th>
               </tr>
             </thead>
@@ -1093,7 +1121,7 @@ watch(toolSearch, () => {
           >
             Previous
           </button>
-          <span>Page {{ toolPage }} of {{ toolPageCount }}</span>
+          <span aria-live="polite">Page {{ toolPage }} of {{ toolPageCount }}</span>
           <button
             class="secondary-button"
             type="button"
@@ -1107,7 +1135,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Self-assessment page content. -->
-    <main v-else-if="currentPage === 'assessment'" class="content-page page-padding">
+    <main id="main-content" v-else-if="currentPage === 'assessment'" class="content-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>Self-Assessment</h1>
         <p>Answer these questions to reflect on how you have been feeling recently.</p>
@@ -1135,7 +1163,7 @@ watch(toolSearch, () => {
 
       <p class="form-note">This self-assessment provides general guidance and is not a medical diagnosis.</p>
 
-      <div v-if="assessmentResult" class="assessment-result">
+      <div v-if="assessmentResult" class="assessment-result" role="status" aria-live="polite">
         <h2>Your Result</h2>
         <p>{{ assessmentResult }}</p>
         <button class="card-link" type="button" @click="selectPage('get-help')">
@@ -1145,7 +1173,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Self-help page content. -->
-    <main v-else-if="currentPage === 'self-help'" class="content-page page-padding">
+    <main id="main-content" v-else-if="currentPage === 'self-help'" class="content-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>Self-Help</h1>
         <p>Try a small activity that fits into your day.</p>
@@ -1187,7 +1215,7 @@ watch(toolSearch, () => {
           </label>
           <button class="action-button" type="submit">Save Check-in</button>
         </form>
-        <p v-if="checkInMessage" class="tool-message">{{ checkInMessage }}</p>
+        <p v-if="checkInMessage" class="tool-message" role="status" aria-live="polite">{{ checkInMessage }}</p>
         <ul v-if="checkIns.length" class="check-in-list">
           <li v-for="entry in checkIns.slice(0, 3)" :key="entry.date + entry.note">
             <strong>{{ entry.date }} - {{ entry.mood }}</strong>
@@ -1199,16 +1227,19 @@ watch(toolSearch, () => {
       <section v-if="activeTool === 'sleep'" class="tool-panel">
         <h2>Sleep Routine</h2>
         <p>Tick the steps you would like to try tonight.</p>
-        <label class="option-row"><input v-model="sleepChecklist.time" type="checkbox" /> Keep a regular bedtime</label>
-        <label class="option-row"><input v-model="sleepChecklist.screen" type="checkbox" /> Put screens away before bed</label>
-        <label class="option-row"><input v-model="sleepChecklist.room" type="checkbox" /> Prepare a quiet, comfortable room</label>
+        <fieldset class="sleep-options">
+          <legend>Choose one or more routine steps</legend>
+          <label class="option-row"><input v-model="sleepChecklist.time" type="checkbox" /> Keep a regular bedtime</label>
+          <label class="option-row"><input v-model="sleepChecklist.screen" type="checkbox" /> Put screens away before bed</label>
+          <label class="option-row"><input v-model="sleepChecklist.room" type="checkbox" /> Prepare a quiet, comfortable room</label>
+        </fieldset>
         <button class="action-button" type="button" @click="saveSleepRoutine">Save Routine</button>
-        <p v-if="sleepMessage" class="tool-message">{{ sleepMessage }}</p>
+        <p v-if="sleepMessage" class="tool-message" role="status" aria-live="polite">{{ sleepMessage }}</p>
       </section>
     </main>
 
     <!-- For Family page content. -->
-    <main v-else-if="currentPage === 'family'" class="content-page page-padding">
+    <main id="main-content" v-else-if="currentPage === 'family'" class="content-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>For Family</h1>
         <p>Learn how to offer calm and practical support to someone you care about.</p>
@@ -1240,7 +1271,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- About page content. -->
-    <main v-else-if="currentPage === 'about'" class="content-page page-padding">
+    <main id="main-content" v-else-if="currentPage === 'about'" class="content-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>About Us</h1>
         <p>Mindful You makes mental health information easier to find.</p>
@@ -1276,7 +1307,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Get Help page content. -->
-    <main v-else-if="currentPage === 'get-help'" class="get-help page-padding">
+    <main id="main-content" v-else-if="currentPage === 'get-help'" class="get-help page-padding" tabindex="-1">
       <!-- Crisis message and support actions. -->
       <div class="page-title">
         <h1>Get Help</h1>
@@ -1311,8 +1342,8 @@ watch(toolSearch, () => {
             {{ supportAdviceLoading ? 'Finding Support...' : 'Find Support' }}
           </button>
         </div>
-        <p v-if="supportAdviceError" class="form-error">{{ supportAdviceError }}</p>
-        <div v-if="supportAdvice" class="support-advice">
+        <p v-if="supportAdviceError" class="form-error" role="alert">{{ supportAdviceError }}</p>
+        <div v-if="supportAdvice" class="support-advice" role="status" aria-live="polite">
           <h3>{{ supportAdvice.title }}</h3>
           <p>{{ supportAdvice.message }}</p>
           <button class="secondary-button" type="button" @click="openAdviceSupport">
@@ -1353,7 +1384,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Dedicated support page content. -->
-    <main v-else-if="supportPageIds.includes(currentPage)" class="content-page page-padding support-service-page">
+    <main id="main-content" v-else-if="supportPageIds.includes(currentPage)" class="content-page page-padding support-service-page" tabindex="-1">
       <button class="back-button" type="button" @click="selectPage('get-help')">Back to Get Help</button>
       <div class="page-title">
         <h1>{{ currentSupportPage.title }}</h1>
@@ -1375,7 +1406,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Geo Location page content. -->
-    <main v-else-if="currentPage === 'geo-location'" class="content-page page-padding geo-page">
+    <main id="main-content" v-else-if="currentPage === 'geo-location'" class="content-page page-padding geo-page" tabindex="-1">
       <div class="page-title">
         <h1>Geo Location</h1>
         <p>Search for places and find a route between two locations.</p>
@@ -1384,7 +1415,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Email page. -->
-    <main v-else-if="currentPage === 'email'" class="content-page page-padding email-page">
+    <main id="main-content" v-else-if="currentPage === 'email'" class="content-page page-padding email-page" tabindex="-1">
       <div class="page-title">
         <h1>Send an Email</h1>
         <p>Send a message and include a file attachment.</p>
@@ -1432,12 +1463,12 @@ watch(toolSearch, () => {
         </button>
       </form>
 
-      <p v-if="emailMessage" class="auth-message">{{ emailMessage }}</p>
+      <p v-if="emailMessage" class="auth-message" role="status" aria-live="polite">{{ emailMessage }}</p>
       <p class="form-note">The first submission to a new recipient may require email confirmation.</p>
     </main>
 
     <!-- Reviews and rating page. -->
-    <main v-else-if="currentPage === 'reviews'" class="reviews-page page-padding">
+    <main id="main-content" v-else-if="currentPage === 'reviews'" class="reviews-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>Reviews</h1>
         <p>See how users rate our support services.</p>
@@ -1454,7 +1485,7 @@ watch(toolSearch, () => {
 
           <label class="rating-score-label">
             Score
-            <select v-model.number="selectedScores[option.title]">
+            <select v-model.number="selectedScores[option.title]" :aria-label="`Score for ${option.title}`">
               <option :value="0" disabled>Select a score</option>
               <option v-for="score in 5" :key="score" :value="score">{{ score }}</option>
             </select>
@@ -1466,12 +1497,12 @@ watch(toolSearch, () => {
         </article>
       </section>
 
-      <p v-if="ratingMessage" class="rating-message">{{ ratingMessage }}</p>
+      <p v-if="ratingMessage" class="rating-message" role="status" aria-live="polite">{{ ratingMessage }}</p>
       <p v-if="!currentUser" class="login-hint">Log in to submit a rating.</p>
     </main>
 
     <!-- Login and registration page. -->
-    <main v-else-if="currentPage === 'login'" class="auth-page page-padding">
+    <main id="main-content" v-else-if="currentPage === 'login'" class="auth-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>{{ registerMode ? 'Register' : 'Login' }}</h1>
         <p>{{ registerMode ? 'Create an account with Firebase Authentication.' : 'Log in with Firebase Authentication.' }}</p>
@@ -1480,20 +1511,20 @@ watch(toolSearch, () => {
       <form class="auth-form" @submit.prevent="submitAuthForm">
         <label v-if="registerMode">
           Name
-          <input v-model="authForm.name" type="text" />
-          <span v-if="authErrors.name" class="form-error">{{ authErrors.name }}</span>
+          <input v-model="authForm.name" type="text" autocomplete="name" required />
+          <span v-if="authErrors.name" class="form-error" role="alert">{{ authErrors.name }}</span>
         </label>
 
         <label>
           Email
-          <input v-model="authForm.email" type="text" />
-          <span v-if="authErrors.email" class="form-error">{{ authErrors.email }}</span>
+          <input v-model="authForm.email" type="email" autocomplete="email" required />
+          <span v-if="authErrors.email" class="form-error" role="alert">{{ authErrors.email }}</span>
         </label>
 
         <label>
           Password
-          <input v-model="authForm.password" type="password" />
-          <span v-if="authErrors.password" class="form-error">{{ authErrors.password }}</span>
+          <input v-model="authForm.password" type="password" :autocomplete="registerMode ? 'new-password' : 'current-password'" required />
+          <span v-if="authErrors.password" class="form-error" role="alert">{{ authErrors.password }}</span>
         </label>
 
         <button class="action-button" type="submit" :disabled="authBusy">
@@ -1501,7 +1532,7 @@ watch(toolSearch, () => {
         </button>
       </form>
 
-      <p v-if="authMessage" class="auth-message">{{ authMessage }}</p>
+      <p v-if="authMessage" class="auth-message" role="alert">{{ authMessage }}</p>
 
     <button class="switch-auth-button" type="button" @click="registerMode = !registerMode">
         {{ registerMode ? 'Already have an account? Login' : 'Need an account? Register' }}
@@ -1509,7 +1540,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Administrator-only page. -->
-    <main v-else-if="currentPage === 'admin'" class="admin-page page-padding">
+    <main id="main-content" v-else-if="currentPage === 'admin'" class="admin-page page-padding" tabindex="-1">
       <div class="page-title">
         <h1>Admin Dashboard</h1>
         <p>Administrator-only information.</p>
@@ -1537,7 +1568,7 @@ watch(toolSearch, () => {
     </main>
 
     <!-- Keep an empty page only for an unknown page name. -->
-    <main v-else class="blank-page"></main>
+    <main id="main-content" v-else class="blank-page" tabindex="-1"></main>
 
     <!-- Footer content. -->
     <footer class="site-footer page-padding">
