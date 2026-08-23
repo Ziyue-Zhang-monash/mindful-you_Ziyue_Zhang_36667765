@@ -503,6 +503,14 @@ const assessmentExportMessage = ref('')
 const aiSupportPlan = ref(null)
 const aiSupportLoading = ref(false)
 const aiSupportError = ref('')
+const supportPlanThemes = [
+  'calming and emotional balance',
+  'sleep and daily routine',
+  'gentle activity and energy',
+  'social connection',
+  'preparing to ask for support'
+]
+const supportPlanThemeIndex = ref(0)
 
 // State used by the Learn, Get Help and Family pages.
 const selectedArticle = ref(null)
@@ -726,8 +734,11 @@ const resetAssessment = () => {
   aiSupportError.value = ''
 }
 
-// Request a support plan based on the assessment result.
+// Request a new support plan using the full set of assessment answers.
 const generateSupportPlan = async () => {
+  const theme = supportPlanThemes[supportPlanThemeIndex.value]
+  supportPlanThemeIndex.value = (supportPlanThemeIndex.value + 1) % supportPlanThemes.length
+
   aiSupportLoading.value = true
   aiSupportError.value = ''
   aiSupportPlan.value = null
@@ -736,7 +747,11 @@ const generateSupportPlan = async () => {
     const response = await fetch('https://mindful-you.pages.dev/api/ai-support', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ result: assessmentResult.value })
+      body: JSON.stringify({
+        result: assessmentResult.value,
+        answers: assessmentAnswers.value,
+        theme
+      })
     })
 
     if (!response.ok) {
@@ -1637,11 +1652,18 @@ watch(toolSearch, () => {
 
         <input type="hidden" name="_subject" :value="emailForm.subject" />
         <input type="hidden" name="name" :value="currentUser?.name" />
-        <input type="hidden" name="email" :value="currentUser?.email" />
+        <input type="hidden" name="account_email" :value="currentUser?.email" />
 
-        <label>
+        <label class="file-upload">
           Attachment
+          <span class="file-upload-control">
+            <span class="file-upload-button">Choose File</span>
+            <span class="file-upload-name">
+              {{ emailAttachment ? emailAttachment.name : 'No file selected' }}
+            </span>
+          </span>
           <input
+            class="file-input"
             name="attachment"
             type="file"
             required
